@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PayApp 결제 데모 • Vercel</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,sans-serif;margin:0;padding:24px;background:#f7f7fb;color:#111}
+    h1{margin:0 0 8px}
+    .note{color:#555;margin-bottom:24px}
+    #shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .item{background:#fff;border:1px solid #e8e8ef;border-radius:14px;padding:14px;box-shadow:0 4px 10px rgba(0,0,0,.04)}
+    .title{font-weight:700;margin:2px 0 8px}
+    .price{color:#555;margin-bottom:10px}
+    button{padding:10px 12px;border-radius:10px;border:0;background:#4f46e5;color:#fff;cursor:pointer}
+    .env{font-size:12px;color:#666;margin-top:14px}
+    code{background:#f1f1f6;padding:2px 6px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <h1>이벤트 코인 상점 (Vercel)</h1>
+  <p class="note">버튼을 누르면 PayApp 결제창이 뜹니다. <br />
+  <strong>주의:</strong> 결제 확정/코인 지급은 <code>/api/pay/feedback</code> 웹훅에서 처리됩니다.</p>
+
+  <!-- PayApp JS API (공식) -->
+  <script src="https://lite.payapp.kr/public/api/v2/payapp-lite.js"></script>
+
+  <div id="shop"></div>
+
+  <script type="module" src="./products.js"></script>
+  <script type="module" src="./vercel-app.js"></script>
+
+  <div class="env">
+    배포 후에는 <code>window.location.origin</code>을 기준으로 자동 설정됩니다.
+  </div>
+</body>
+</html>
