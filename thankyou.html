@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>결제 완료</title>
+<style>body{font-family:system-ui;background:#0a1220;color:#eaf6ff;padding:32px}</style></head>
+<body>
+  <h1>처리 중…</h1>
+  <p>결제는 완료되었을 수 있습니다. 실제 코인 지급은 서버 웹훅에서 확정됩니다.</p>
+  <script>
+    try { window.parent && window.parent.postMessage({ type:'shop-purchase-success' }, '*'); } catch {}
+  </script>
+</body>
+</html>

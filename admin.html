@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>결제 로그(임시)</title>
+<style>body{font-family:system-ui;padding:20px} table{border-collapse:collapse} td,th{border:1px solid #ddd;padding:6px}</style>
+<h1>최근 결제 피드백</h1>
+<table id="t"><thead><tr><th>시각</th><th>pay_state</th><th>goodname</th><th>price</th><th>buyerid</th><th>orderId(var1)</th><th>productId(var2)</th><th>mul_no</th></tr></thead><tbody></tbody></table>
+<script>
+  fetch('/api/pay/feedback').then(r=>r.json()).then(({logs})=>{
+    const tb=document.querySelector('#t tbody');
+    (logs||[]).reverse().forEach(x=>{
+      const tr=document.createElement('tr');
+      const td=v=>{const d=document.createElement('td'); d.textContent=v??''; return d};
+      tr.append(td(new Date(x.t).toLocaleString()));
+      tr.append(td(x.pay_state)); tr.append(td(x.goodname)); tr.append(td(x.price));
+      tr.append(td(x.buyerid));  tr.append(td(x.var1));     tr.append(td(x.var2));
+      tr.append(td(x.mul_no));
+      tb.append(tr);
+    });
+  });
+</script>
