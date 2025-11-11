@@ -4,8 +4,8 @@ const FEEDBACK_URL = ORIGIN + "/api/pay/feedback";
 const RETURN_URL   = ORIGIN + "/thankyou.html";
 
 // 값을 프로젝트에 맞게 교체하세요
-const PAYAPP_USERID = "YOUR_PAYAPP_USERID";   // 판매자 아이디
-const SHOP_NAME     = "SIU Shop";             // 상점명
+const PAYAPP_USERID = "siustudio";   // 판매자 아이디
+const SHOP_NAME     = "태양계정복";             // 상점명
 
 const $list = document.getElementById('list');
 const $eco  = document.getElementById('eco-balance');
