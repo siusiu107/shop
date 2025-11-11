@@ -63,7 +63,7 @@ async function renderProducts(){
 
     const { orderId, goodname, priceKRW } = init.order;
 
-    // 2) PayApp 결제창 호출
+    // 2) PayApp 결제창 호출 (문자 발송 없이, 웹 결제창으로 바로 이동)
     PayApp.setParam('userid',      PAYAPP_USERID);
     PayApp.setParam('shopname',    SHOP_NAME);
     PayApp.setParam('goodname',    goodname);
@@ -74,6 +74,9 @@ async function renderProducts(){
     PayApp.setParam('returnurl',   RETURN_URL);
     PayApp.setParam('feedbackurl', FEEDBACK_URL);
     PayApp.setParam('openpaytype', 'card,naverpay,applepay');
+    // ✅ 추가: 문자 미발송 + 웹 결제창 바로 연결
+    PayApp.setParam('smsuse',      '발송안함');
+    PayApp.setParam('redirectpay', '결제창연결');
 
     PayApp.payrequest();
   });
