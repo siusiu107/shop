@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>이벤트코인 결제</title>
+  <script src="https://lite.payapp.kr/public/api/v2/payapp-lite.js"></script>
+  <!-- Firebase(게임과 동일 버전) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIrsnUYEBG3cqbPrKD_eejOdtsCDjYG9k",
+      authDomain: "siu-studio.firebaseapp.com",
+      databaseURL: "https://siu-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "siu-studio",
+      storageBucket: "siu-studio.appspot.com",
+      messagingSenderId: "830887143444",
+      appId: "1:830887143444:web:70b45fc12140e893c31f01",
+      measurementId: "G-1Y090YJDB6"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const PAYAPP_USERID = 'siustudio'; // PayApp 판매자 아이디
+    const PACKS = {
+      "eco-100":  { priceKRW: 1100,  ecoins: 100,  title: "이벤트코인 100개" },
+      "eco-600":  { priceKRW: 5500,  ecoins: 600,  title: "이벤트코인 600개" },
+      "eco-1300": { priceKRW: 11000, ecoins: 1300, title: "이벤트코인 1300개" },
+      "eco-2800": { priceKRW: 22000, ecoins: 2800, title: "이벤트코인 2800개" }
+    };
+
+    let currentUid = null;
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        alert('로그인이 필요합니다. 게임 화면에서 로그인해주세요.');
+        location.replace('/game.html'); // 로그인 유도
+        return;
+      }
+      currentUid = user.uid;
+      document.getElementById('user-ok').textContent = '로그인 확인: ' + (user.email || user.uid);
+      document.getElementById('packs').style.display = 'grid';
+    });
+
+    function startPay(packId) {
+      if (!currentUid) { alert('로그인 후 이용하세요.'); return; }
+      const p = PACKS[packId];
+      if (!p) return;
+
+      // 결제 후 사용자를 보낼 주소(부모 없이 바로 게임으로 복귀)
+      const redirect = new URL('/game.html', location.origin);
+      redirect.hash = '#mailbox';
+
+      const meta = { v: 1, uid: currentUid, packId, ecoins: p.ecoins, priceKRW: p.priceKRW, t: Date.now() };
+
+      PayApp
+        .setParam('userid', PAYAPP_USERID)
+        .setParam('shopname', '태양계 정복 상점')
+        .setParam('goodname', p.title)
+        .setParam('price', String(p.priceKRW))
+        .setParam('feedbackurl', location.origin + '/api/payapp/feedback')
+        .setParam('redirecturl', redirect.toString())
+        .setParam('buyerid', currentUid)
+        .setParam('var1', JSON.stringify(meta))
+        .payrequest();
+    }
+
+    window.startPay = startPay;
+  </script>
+  <style>
+    body{font-family:system-ui,AppleSDGothicNeo,Segoe UI,Roboto;max-width:720px;margin:40px auto;padding:0 16px}
+    h1{font-size:22px;margin:0 0 8px}
+    #packs{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+    .card{padding:16px;border:1px solid #e5e7eb;border-radius:12px}
+    .card b{display:block;margin-bottom:6px}
+    button{margin-top:8px;padding:10px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#111;color:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1>이벤트코인 결제</h1>
+  <div id="user-ok">로그인 확인중…</div>
+
+  <div id="packs">
+    <div class="card"><b>100 EC</b><div>₩1,100</div><button onclick="startPay('eco-100')">구매</button></div>
+    <div class="card"><b>600 EC</b><div>₩5,500</div><button onclick="startPay('eco-600')">구매</button></div>
+    <div class="card"><b>1300 EC</b><div>₩11,000</div><button onclick="startPay('eco-1300')">구매</button></div>
+    <div class="card"><b>2800 EC</b><div>₩22,000</div><button onclick="startPay('eco-2800')">구매</button></div>
+  </div>
+</body>
+</html>
