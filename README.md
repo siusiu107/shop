@@ -5,7 +5,9 @@
 - 이 페이지 자체에서 Firebase 이메일/비밀번호 로그인 & 회원가입
 - Google 계정으로 로그인
 - PayApp 결제
-- 결제 승인 시 Firebase RTDB의 `users/{server}/{id}/mailbox/{mailId}`에
+
+
+
   `rewards.eventCoins` 포함 우편 생성
 - 그리고 **이 페이지에서 실시간으로 새 우편을 감지하여
   "결제가 확인되었습니다! 이벤트코인 N개" 토스트 알림 표시**
