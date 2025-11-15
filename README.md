@@ -1,6 +1,7 @@
 # PayApp 이벤트코인 결제 (독립 로그인 + Google + 결제완료 알림 버전)
 
 이 zip만 Vercel에 올려도,
+
 - 이 페이지 자체에서 Firebase 이메일/비밀번호 로그인 & 회원가입
 - Google 계정으로 로그인
 - PayApp 결제
