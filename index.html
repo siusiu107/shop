@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>이벤트코인 결제 (독립 페이지)</title>
+  <script src="https://lite.payapp.kr/public/api/v2/payapp-lite.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { 
+      getAuth, onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    // 네 게임과 같은 Firebase 프로젝트 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIrsnUYEBG3cqbPrKD_eejOdtsCDjYG9k",
+      authDomain: "siu-studio.firebaseapp.com",
+      databaseURL: "https://siu-studio-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "siu-studio",
+      storageBucket: "siu-studio.appspot.com",
+      messagingSenderId: "830887143444",
+      appId: "1:830887143444:web:70b45fc12140e893c31f01",
+      measurementId: "G-1Y090YJDB6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+    window._auth = auth; // 디버그용
+
+    const PAYAPP_USERID = 'siustudio'; // PayApp 판매자 아이디
+    const PACKS = {
+      "eco-100":  { priceKRW: 1100,  ecoins: 100,  title: "이벤트코인 100개" },
+      "eco-600":  { priceKRW: 5500,  ecoins: 600,  title: "이벤트코인 600개" },
+      "eco-1300": { priceKRW: 11000, ecoins: 1300, title: "이벤트코인 1300개" },
+      "eco-2800": { priceKRW: 22000, ecoins: 2800, title: "이벤트코인 2800개" }
+    };
+
+    const loginBox   = document.getElementById('login-box');
+    const userBox    = document.getElementById('user-box');
+    const userLabel  = document.getElementById('user-label');
+    const paySection = document.getElementById('pay-section');
+    const loginForm  = document.getElementById('login-form');
+    const signupBtn  = document.getElementById('signup-btn');
+    const googleBtn  = document.getElementById('google-btn');
+    const logoutBtn  = document.getElementById('logout-btn');
+    const msgBox     = document.getElementById('msg');
+
+    function setMsg(text) {
+      msgBox.textContent = text || '';
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        loginBox.style.display = 'none';
+        userBox.style.display = 'flex';
+        paySection.style.display = 'grid';
+        userLabel.textContent = user.email || user.displayName || user.uid;
+        setMsg('로그인이 완료되었습니다.');
+      } else {
+        loginBox.style.display = 'block';
+        userBox.style.display = 'none';
+        paySection.style.display = 'none';
+        userLabel.textContent = '';
+        setMsg('이벤트코인 결제를 이용하려면 먼저 로그인하세요.');
+      }
+    });
+
+    loginForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('email')?.value || '').trim();
+      const pw    = (document.getElementById('password')?.value || '').trim();
+      if (!email || !pw) { setMsg('이메일과 비밀번호를 입력하세요.'); return; }
+      try {
+        setMsg('로그인 중...');
+        await signInWithEmailAndPassword(auth, email, pw);
+      } catch (err) {
+        console.error(err);
+        setMsg('로그인 실패: ' + (err.code || err.message));
+      }
+    });
+
+    signupBtn?.addEventListener('click', async () => {
+      const email = (document.getElementById('email')?.value || '').trim();
+      const pw    = (document.getElementById('password')?.value || '').trim();
+      if (!email || !pw) { setMsg('이메일과 비밀번호를 입력하세요.'); return; }
+      try {
+        setMsg('회원가입 중...');
+        await createUserWithEmailAndPassword(auth, email, pw);
+        setMsg('회원가입 완료! 자동으로 로그인되었습니다.');
+      } catch (err) {
+        console.error(err);
+        setMsg('회원가입 실패: ' + (err.code || err.message));
+      }
+    });
+
+    googleBtn?.addEventListener('click', async () => {
+      try {
+        setMsg('Google 계정으로 로그인 중...');
+        await signInWithPopup(auth, googleProvider);
+        setMsg('Google 로그인 완료!');
+      } catch (err) {
+        console.error(err);
+        // Firebase 설정에 따라 "이미 다른 계정으로 가입된 이메일" 같은 에러가 날 수 있음
+        setMsg('Google 로그인 실패: ' + (err.code || err.message));
+      }
+    });
+
+    logoutBtn?.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    function startPay(packId) {
+      const user = auth.currentUser;
+      if (!user) {
+        alert('로그인 후 이용하세요.');
+        return;
+      }
+      const p = PACKS[packId];
+      if (!p) return;
+
+      const redirect = new URL('/', location.origin);
+      redirect.hash = '#pay-done';
+
+      const meta = {
+        v: 1,
+        uid: user.uid,
+        packId,
+        ecoins: p.ecoins,
+        priceKRW: p.priceKRW,
+        t: Date.now()
+      };
+
+      try {
+        PayApp
+          .setParam('userid', PAYAPP_USERID)
+          .setParam('shopname', '태양계 정복 상점')
+          .setParam('goodname', p.title)
+          .setParam('price', String(p.priceKRW))
+          .setParam('feedbackurl', location.origin + '/api/payapp/feedback')
+          .setParam('redirecturl', redirect.toString())
+          .setParam('buyerid', user.uid)
+          .setParam('var1', JSON.stringify(meta))
+          .payrequest();
+      } catch (err) {
+        console.error(err);
+        alert('결제를 시작하는 중 오류가 발생했습니다.');
+      }
+    }
+
+    window.startPay = startPay;
+  </script>
+  <style>
+    body{
+      font-family:system-ui,AppleSDGothicNeo,Segoe UI,Roboto;
+      max-width:720px;margin:40px auto;padding:0 16px;
+    }
+    h1{font-size:22px;margin:0 0 8px}
+    .card{padding:16px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
+    .field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+    input{padding:8px 10px;border-radius:8px;border:1px solid #d1d5db}
+    button{padding:8px 12px;border-radius:10px;border:1px solid #e5e7eb;border-radius:10px;background:#111;color:#fff;cursor:pointer}
+    button.secondary{background:#fff;color:#111}
+    #pay-section{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+    #user-box{display:none;align-items:center;justify-content:space-between;margin-top:16px;padding:8px 12px;border-radius:10px;background:#f3f4f6}
+    #msg{margin-top:8px;color:#6b7280;font-size:14px;min-height:1.2em}
+    small{color:#9ca3af}
+    .btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  </style>
+</head>
+<body>
+  <h1>이벤트코인 결제</h1>
+  <p><small>이 페이지 하나만으로 로그인(이메일/비번 + Google)과 결제를 테스트할 수 있습니다.</small></p>
+
+  <div id="login-box" class="card">
+    <h2 style="margin-top:0;font-size:18px;">로그인 / 회원가입</h2>
+    <form id="login-form">
+      <div class="field">
+        <label for="email">이메일</label>
+        <input id="email" type="email" autocomplete="email" required/>
+      </div>
+      <div class="field">
+        <label for="password">비밀번호</label>
+        <input id="password" type="password" autocomplete="current-password" required/>
+      </div>
+      <div class="btn-row">
+        <button type="submit">로그인</button>
+        <button type="button" id="signup-btn" class="secondary">회원가입</button>
+        <button type="button" id="google-btn" class="secondary">Google로 로그인</button>
+      </div>
+    </form>
+    <div id="msg"></div>
+  </div>
+
+  <div id="user-box">
+    <div>로그인됨: <strong id="user-label"></strong></div>
+    <button id="logout-btn" class="secondary">로그아웃</button>
+  </div>
+
+  <div id="pay-section">
+    <div class="card">
+      <b>100 EC</b>
+      <div>₩1,100</div>
+      <button onclick="startPay('eco-100')">구매</button>
+    </div>
+    <div class="card">
+      <b>600 EC</b>
+      <div>₩5,500</div>
+      <button onclick="startPay('eco-600')">구매</button>
+    </div>
+    <div class="card">
+      <b>1300 EC</b>
+      <div>₩11,000</div>
+      <button onclick="startPay('eco-1300')">구매</button>
+    </div>
+    <div class="card">
+      <b>2800 EC</b>
+      <div>₩22,000</div>
+      <button onclick="startPay('eco-2800')">구매</button>
+    </div>
+  </div>
+</body>
+</html>
