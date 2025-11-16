@@ -13,12 +13,14 @@ const LINKVAL = process.env.PAYAPP_LINKVAL;      // PayApp 연동 VALUE(비밀)
 
 // ⚠️ index.html 의 PACKS와 반드시 동일한 구성이어야 합니다.
 const PACKS = {
-  'eco-100':  { priceKRW: 1100,  ecoins: 120,  title: '이벤트코인 스타터 번들' },
-  'eco-300':  { priceKRW: 3300,  ecoins: 380,  title: '이벤트코인 묶음' },
-  'eco-700':  { priceKRW: 7700,  ecoins: 950,  title: '이벤트코인 자루' },
-  'eco-1500': { priceKRW: 15000, ecoins: 2100, title: '이벤트코인 상자' },
-  'eco-4000': { priceKRW: 39000, ecoins: 6000, title: '이벤트코인 보물상자' },
+  'eco-120':  { priceKRW: 1100,  ecoins: 120,  title: '스타터 묶음' },
+  'eco-300':  { priceKRW: 2200,  ecoins: 300,  title: '이벤트코인 작은 자루' },
+  'eco-700':  { priceKRW: 4400,  ecoins: 700,  title: '이벤트코인 중형 자루' },
+  'eco-1600': { priceKRW: 8800,  ecoins: 1600, title: '이벤트코인 대형 자루' },
+  'eco-3600': { priceKRW: 18000, ecoins: 3600, title: '이벤트코인 보물 상자' },
+  'eco-8000': { priceKRW: 39000, ecoins: 8000, title: '이벤트코인 우주 창고' }
 };
+
 
 export default async function handler(req, res) {
   try {
