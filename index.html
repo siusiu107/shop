@@ -30,15 +30,33 @@
       padding:24px 12px;
     }
     .shell{
+      position:relative;
       width:100%;
       max-width:960px;
       border-radius:24px;
-      background:linear-gradient(135deg,rgba(15,23,42,0.98),rgba(15,23,42,0.92));
+      background:linear-gradient(135deg,rgba(15,23,42,0.97),rgba(15,23,42,0.9));
       box-shadow:0 24px 70px rgba(15,23,42,0.9);
       border:1px solid rgba(148,163,184,0.45);
       padding:20px;
       display:grid;
       gap:18px;
+      overflow:hidden;
+    }
+    /* 은은한 그라디언트 보더 */
+    .shell::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      padding:1px;
+      background:linear-gradient(135deg,rgba(56,189,248,0.7),rgba(129,140,248,0.5),rgba(45,212,191,0.7));
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      pointer-events:none;
+      opacity:0.65;
     }
 
     @media (min-width:768px){
@@ -51,6 +69,7 @@
     .hero{
       position:relative;
       padding:8px 4px 8px 2px;
+      overflow:hidden;
     }
     .hero-title{
       display:flex;
@@ -62,10 +81,10 @@
     }
     .hero-pill{
       font-size:11px;
-      padding:3px 8px;
+      padding:3px 9px;
       border-radius:999px;
-      background:rgba(34,197,94,0.12);
-      border:1px solid rgba(34,197,94,0.5);
+      background:rgba(34,197,94,0.16);
+      border:1px solid rgba(34,197,94,0.7);
       color:#bbf7d0;
     }
     .hero-sub{
@@ -74,19 +93,23 @@
       color:#9ca3af;
       line-height:1.5;
     }
+    .hero-sub strong{
+      color:#e5e7eb;
+    }
     .hero-highlight{
-      margin-top:10px;
+      margin-top:12px;
       padding:10px 12px;
       border-radius:14px;
-      background:linear-gradient(135deg,rgba(8,47,73,0.8),rgba(30,64,175,0.7));
-      border:1px solid rgba(56,189,248,0.7);
+      background:linear-gradient(135deg,rgba(8,47,73,0.9),rgba(30,64,175,0.85));
+      border:1px solid rgba(56,189,248,0.8);
       font-size:13px;
+      box-shadow:0 12px 35px rgba(15,23,42,0.9);
     }
     .hero-highlight b{
       color:#e0f2fe;
     }
     .hero-badges{
-      margin-top:10px;
+      margin-top:12px;
       display:flex;
       flex-wrap:wrap;
       gap:6px;
@@ -96,37 +119,49 @@
       padding:3px 8px;
       border-radius:999px;
       border:1px solid rgba(148,163,184,0.45);
-      background:rgba(15,23,42,0.8);
+      background:rgba(15,23,42,0.82);
       color:#cbd5f5;
     }
 
-    /* 이미지 영역 */
-    .hero-art{
-      margin-top:14px;
-      padding:10px;
-      border-radius:18px;
-      background:radial-gradient(circle at 20% 0%,rgba(56,189,248,0.35),transparent 55%),
-                 radial-gradient(circle at 80% 100%,rgba(249,115,22,0.45),transparent 55%),
-                 rgba(15,23,42,0.9);
-      border:1px dashed rgba(148,163,184,0.6);
-      display:flex;
-      align-items:center;
-      gap:10px;
+    /* 이미지 없이 우주 분위기 연출 */
+    .hero-orbit{
+      position:absolute;
+      right:-40px;
+      bottom:-40px;
+      width:220px;
+      height:220px;
+      background:
+        radial-gradient(circle at 30% 20%,rgba(56,189,248,0.6),transparent 60%),
+        radial-gradient(circle at 80% 80%,rgba(249,115,22,0.55),transparent 55%);
+      opacity:0.9;
+      pointer-events:none;
     }
-    .hero-art img{
-      width:72px;
-      height:72px;
-      object-fit:contain;
-      flex-shrink:0;
-      filter:drop-shadow(0 0 18px rgba(56,189,248,0.75));
+    .orbit-ring{
+      position:absolute;
+      inset:34px;
+      border-radius:999px;
+      border:1px dashed rgba(148,163,184,0.4);
+      box-shadow:0 0 24px rgba(15,23,42,0.9) inset;
     }
-    .hero-art-text{
-      font-size:12px;
-      color:#d1d5db;
-      line-height:1.5;
+    .planet{
+      position:absolute;
+      border-radius:999px;
     }
-    .hero-art-text b{
-      color:#facc15;
+    .planet-main{
+      width:46px;
+      height:46px;
+      right:60px;
+      top:32px;
+      background:radial-gradient(circle at 30% 20%,#facc15,#f97316);
+      box-shadow:0 0 28px rgba(250,204,21,0.7);
+    }
+    .planet-sub{
+      width:26px;
+      height:26px;
+      right:18px;
+      bottom:52px;
+      background:radial-gradient(circle at 30% 20%,#38bdf8,#6366f1);
+      box-shadow:0 0 20px rgba(56,189,248,0.8);
     }
 
     .auth-card{
@@ -156,33 +191,9 @@
       font-size:11px;
       padding:3px 7px;
       border-radius:999px;
-      background:rgba(56,189,248,0.1);
+      background:rgba(56,189,248,0.12);
       border:1px solid rgba(56,189,248,0.7);
       color:#e0f2fe;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      margin-bottom:6px;
-    }
-    .field label{
-      font-size:11px;
-      color:#9ca3af;
-    }
-    .field input{
-      padding:8px 10px;
-      border-radius:9px;
-      border:1px solid rgba(75,85,99,0.9);
-      background:rgba(15,23,42,0.9);
-      color:#e5e7eb;
-      font-size:13px;
-    }
-    .field input:focus{
-      outline:none;
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(56,189,248,0.4);
     }
 
     .btn-row{
@@ -230,18 +241,11 @@
     }
     .msg strong{color:#e5e7eb;}
 
-    .login-note{
-      margin-top:4px;
-      font-size:11px;
-      color:#facc15;
-      line-height:1.5;
-    }
-
     .user-bar{
-      margin-top:8px;
+      margin-top:6px;
       padding:7px 10px;
       border-radius:12px;
-      background:rgba(15,23,42,0.95);
+      background:rgba(15,23,42,0.96);
       border:1px solid rgba(148,163,184,0.6);
       font-size:11px;
       display:flex;
@@ -278,7 +282,6 @@
       color:#9ca3af;
     }
     .shop-promo{
-      margin-top:6px;
       font-size:11px;
       color:#fde68a;
     }
@@ -397,98 +400,60 @@
 </head>
 <body>
   <div class="shell">
-    <!-- 왼쪽: 소개 + 비주얼 -->
+    <!-- 왼쪽: 소개 -->
     <section class="hero">
       <div class="hero-title">
         <span>태양계 정복 · 이벤트코인 상점</span>
-        <span class="hero-pill">x2 VALUE 이벤트!</span>
+        <span class="hero-pill">x2 VALUE</span>
       </div>
       <p class="hero-sub">
-        태양계 정복 게임에서만 쓸 수 있는 <strong>프리미엄 화폐</strong>,
-        <strong>이벤트코인</strong>을 미리 채워두면<br/>
-        한정 상점, 한정 우주선, 특별 배너 이벤트에서
-        <span style="color:#e0f2fe;">일반 골드보다 최대 x2 배 가치</span>로 활용할 수 있어.
+        태양계 정복에서만 사용하는 <strong>이벤트코인</strong>을 미리 충전해서<br/>
+        한정 상점·우주선·배너 이벤트를 더 빠르게 즐겨봐.
       </p>
       <div class="hero-highlight">
-        <b>💡 TIP.</b> 지금 결제하면 게임 안에서
-        <b>“이벤트코인 자루 / 상자”</b>로 자동 전환돼.
-        보상은 <b>게임 우편함</b>으로 안전하게 지급돼서 실수로 써도 바로 사라지지 않아.
+        <b>🎁 결제 즉시 우편 지급</b><br/>
+        결제 후 같은 계정의 게임 우편함으로 이벤트코인이 자동 지급돼.
       </div>
       <div class="hero-badges">
         <span class="badge">실시간 우편 지급</span>
         <span class="badge">PayApp 안전 결제</span>
-        <span class="badge">양쪽 모두 같은 Firebase 계정 사용</span>
+        <span class="badge">게임 계정 완전 연동</span>
       </div>
 
-      <div class="hero-art">
-        <!-- 🔽 여기 이미지를 넣으면 좋음: 이벤트코인 묶음 / 자루 / 상자 일러스트 -->
-        <!-- 예: <img src="images/event-coin-bag.png" alt="이벤트코인 자루"> -->
-        <img src="images/event-coin-bag.png" alt="이벤트코인 자루 (예시)">
-        <div class="hero-art-text">
-          <b>이미지 가이드</b><br/>
-          - 512×512 PNG 또는 WebP 추천<br/>
-          - 반투명 배경의 <b>이벤트코인 더미 / 자루 / 상자</b> 일러스트를
-            <code>images/event-coin-bag.png</code> 로 넣어두면 좋음.<br/>
-          - 더 화려하게 하고 싶으면, 우주선+코인 콤보 일러스트도 추가 가능.
-        </div>
+      <!-- 이미지 대신 CSS 오브젝트로 우주 느낌 -->
+      <div class="hero-orbit">
+        <div class="orbit-ring"></div>
+        <div class="planet planet-main"></div>
+        <div class="planet planet-sub"></div>
       </div>
     </section>
 
-    <!-- 오른쪽: 로그인 + 상점 -->
+    <!-- 오른쪽: 계정 + 상점 -->
     <section>
       <div class="auth-card" id="auth-card">
         <div class="auth-header">
           <div>
-            <div class="auth-title">로그인</div>
+            <div class="auth-title">게임 계정</div>
             <div class="auth-caption">
-              태양계 정복 게임과 <strong>같은 Firebase 계정</strong>으로만 로그인해야
-              이벤트코인이 <strong>정확한 게임 우편함</strong>으로 도착해.
+              부모창(메인 게임)에서 로그인한 계정으로만 결제가 진행돼.
             </div>
           </div>
-          <div class="auth-badge">게임 계정 연동 필수</div>
+          <div class="auth-badge">부모창 로그인 연동</div>
         </div>
 
-        <form id="login-form">
-          <div class="field">
-            <label for="email">이메일 (태양계 정복에서 쓰는 이메일)</label>
-            <input id="email" type="email" autocomplete="email" placeholder="you@example.com" required/>
+        <div class="user-bar" id="user-box">
+          <div>
+            <div style="font-size:10px;color:#9ca3af;">현재 계정</div>
+            <div class="user-email" id="user-label">로그인 필요</div>
           </div>
-          <div class="field">
-            <label for="password">비밀번호</label>
-            <input id="password" type="password" autocomplete="current-password" required/>
-          </div>
-          <div class="btn-row">
-            <button type="submit" class="btn-primary">
-              <span>이메일로 로그인</span>
-            </button>
-            <button type="button" id="google-btn" class="btn-secondary">
-              <span>Google 계정으로 로그인</span>
-            </button>
-            <button type="button" id="signup-btn" class="btn-ghost">
-              <span>회원가입 / 계정 만들기</span>
+          <div class="btn-row" style="margin:0;">
+            <button type="button" id="open-parent-login" class="btn-primary" style="font-size:11px;padding:6px 12px;">
+              부모창에서 로그인
             </button>
           </div>
-        </form>
-
-        <div class="login-note">
-          ▪️ <strong>회원가입</strong> 버튼을 누르면
-          <strong>태양계정복 메인 사이트</strong>로 이동해.<br/>
-          ▪️ 거기서 계정을 만든 뒤, 이 결제 페이지에서도
-          <strong>같은 이메일 / Google 계정</strong>으로 로그인해야
-          이벤트코인이 같은 계정의 우편함으로 지급돼.
         </div>
 
         <div class="msg" id="msg"></div>
-
-        <div class="user-bar" id="user-box" style="display:none;">
-          <div>
-            <div style="font-size:10px;color:#9ca3af;">현재 로그인된 계정</div>
-            <div class="user-email" id="user-label"></div>
-          </div>
-          <button type="button" id="logout-btn" class="btn-secondary" style="font-size:11px;padding:5px 10px;">
-            로그아웃
-          </button>
-        </div>
       </div>
 
       <div class="shop-card" id="shop-card" style="margin-top:10px;opacity:0.35;pointer-events:none;">
@@ -501,7 +466,6 @@
         </div>
 
         <div class="packs" id="pay-section">
-          <!-- 각 상품 카드 안의 이모지는 나중에 이미지로 교체해도 됨 -->
           <div class="pack" data-tier="starter">
             <div class="pack-icon">✨</div>
             <div class="pack-name">
@@ -510,7 +474,7 @@
             </div>
             <div class="pack-amount">이벤트코인 120개</div>
             <div class="pack-price">₩1,100 · 소소하게 시작하기</div>
-            <div class="pack-highlight">튜토리얼·작은 버프용으로 딱 좋아.</div>
+            <div class="pack-highlight">튜토리얼·작은 버프용에 적당한 구성.</div>
             <button onclick="startPay('eco-120')">120 EC 구매</button>
           </div>
 
@@ -522,7 +486,7 @@
             </div>
             <div class="pack-amount">이벤트코인 300개</div>
             <div class="pack-price">₩2,200 · 가성비 패키지</div>
-            <div class="pack-highlight">일반 골드 대비 체감 가치 약 2배!</div>
+            <div class="pack-highlight">이벤트 전용 상점에서 체감 가치 상승.</div>
             <button onclick="startPay('eco-300')">300 EC 구매</button>
           </div>
 
@@ -534,7 +498,7 @@
             </div>
             <div class="pack-amount">이벤트코인 700개</div>
             <div class="pack-price">₩4,400 · 한정 상점 대비 최적</div>
-            <div class="pack-highlight">이벤트 한 번은 넉넉히 돌릴 수 있는 양.</div>
+            <div class="pack-highlight">이벤트 한 번은 넉넉하게 즐길 수 있는 양.</div>
             <button onclick="startPay('eco-700')">700 EC 구매</button>
           </div>
 
@@ -546,7 +510,7 @@
             </div>
             <div class="pack-amount">이벤트코인 1,600개</div>
             <div class="pack-price">₩8,800 · 자주 하는 유저용</div>
-            <div class="pack-highlight">우주선/배너 이벤트를 여유 있게 즐기고 싶을 때.</div>
+            <div class="pack-highlight">우주선·배너 이벤트를 여유 있게 대비.</div>
             <button onclick="startPay('eco-1600')">1,600 EC 구매</button>
           </div>
 
@@ -558,7 +522,7 @@
             </div>
             <div class="pack-amount">이벤트코인 3,600개</div>
             <div class="pack-price">₩18,000 · 헤비 유저 패키지</div>
-            <div class="pack-highlight">2~3회 대형 이벤트를 한 번에 대비.</div>
+            <div class="pack-highlight">2~3회 대형 이벤트를 한 번에 준비.</div>
             <button onclick="startPay('eco-3600')">3,600 EC 구매</button>
           </div>
 
@@ -570,7 +534,7 @@
             </div>
             <div class="pack-amount">이벤트코인 8,000개</div>
             <div class="pack-price">₩39,000 · 장기 투자용</div>
-            <div class="pack-highlight">장기적인 한정 콘텐츠 대비용, 최대 혜택.</div>
+            <div class="pack-highlight">장기적인 한정 콘텐츠 대비, 최대 혜택.</div>
             <button onclick="startPay('eco-8000')">8,000 EC 구매</button>
           </div>
         </div>
@@ -584,11 +548,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import {
-      getAuth, onAuthStateChanged,
-      signInWithEmailAndPassword,
-      signOut,
-      GoogleAuthProvider,
-      signInWithPopup
+      getAuth, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
     import {
       getDatabase, ref, get, onValue
@@ -608,19 +568,16 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db   = getDatabase(app);
-    const googleProvider = new GoogleAuthProvider();
 
-    const loginForm  = document.getElementById('login-form');
-    const signupBtn  = document.getElementById('signup-btn');
-    const googleBtn  = document.getElementById('google-btn');
-    const logoutBtn  = document.getElementById('logout-btn');
     const msgBox     = document.getElementById('msg');
     const userBox    = document.getElementById('user-box');
     const userLabel  = document.getElementById('user-label');
     const shopCard   = document.getElementById('shop-card');
     const toastBox   = document.getElementById('toast');
+    const parentLoginBtn = document.getElementById('open-parent-login');
 
     function setMsg(text){
+      if(!msgBox) return;
       msgBox.textContent = text || '';
     }
     function showToast(message, timeoutMs = 5000){
@@ -645,6 +602,7 @@
     };
 
     function enableShop(enabled){
+      if(!shopCard) return;
       if(enabled){
         shopCard.style.opacity = '1';
         shopCard.style.pointerEvents = 'auto';
@@ -660,18 +618,18 @@
       if(!user || mailboxListenerAttached) return;
       mailboxListenerAttached = true;
       try{
-        setMsg('게임 우편함 연결 중... (userServerMap 조회)');
+        setMsg('게임 우편함 연결 중...');
         const mapRef = ref(db,'userServerMap/'+user.uid);
         const mapSnap = await get(mapRef);
         if(!mapSnap.exists()){
-          setMsg('게임 데이터가 아직 없습니다. 먼저 태양계 정복 게임에 접속해 계정을 생성해야 해.');
+          setMsg('먼저 태양계 정복 게임에 접속해서 계정을 만들어 줘.');
           return;
         }
         const mapVal = mapSnap.val() || {};
         const server = mapVal.server;
         const id     = mapVal.id;
         if(!server || !id){
-          setMsg('게임 계정 매핑 정보가 올바르지 않습니다.');
+          setMsg('게임 계정 매핑 정보에 문제가 있어.');
           return;
         }
         const mailboxRef = ref(db,`users/${server}/${id}/mailbox`);
@@ -718,70 +676,48 @@
       }
     }
 
+    // 부모창에 "상점 프레임 준비 완료" 신호 (원하면 부모에서 postMessage로 받으면 됨)
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ source:'siu-space', type:'ECO_SHOP_READY' }, '*');
+    }
+
     onAuthStateChanged(auth,(user)=>{
       if(user){
-        document.getElementById('login-form').style.opacity = '0.5';
-        document.getElementById('login-form').style.pointerEvents = 'none';
-        userBox.style.display = 'flex';
-        userLabel.textContent = user.email || user.displayName || user.uid;
-        setMsg('로그인이 완료되었습니다. 게임 계정과 연동 중...');
+        if(userLabel){
+          userLabel.textContent = user.email || user.displayName || user.uid;
+        }
+        if(userBox){
+          userBox.style.opacity = '1';
+        }
+        setMsg('로그인이 확인되었습니다. 이 계정으로 결제가 진행돼.');
         enableShop(true);
         attachMailboxListener(user);
       }else{
-        document.getElementById('login-form').style.opacity = '1';
-        document.getElementById('login-form').style.pointerEvents = 'auto';
-        userBox.style.display = 'none';
-        userLabel.textContent = '';
+        if(userLabel){
+          userLabel.textContent = '로그인 필요 · 부모창(메인 게임)에서 로그인해 줘.';
+        }
+        if(userBox){
+          userBox.style.opacity = '0.8';
+        }
         enableShop(false);
-        setMsg('이벤트코인 구매를 하려면 먼저 로그인해야 해.');
+        setMsg('부모창에서 로그인하면 이 페이지에도 자동으로 반영돼.');
       }
     });
 
-    loginForm?.addEventListener('submit',async (e)=>{
-      e.preventDefault();
-      const email = (document.getElementById('email')?.value || '').trim();
-      const pw    = (document.getElementById('password')?.value || '').trim();
-      if(!email || !pw){
-        setMsg('이메일과 비밀번호를 입력해 줘.');
-        return;
-      }
-      try{
-        setMsg('로그인 중...');
-        await signInWithEmailAndPassword(auth,email,pw);
-      }catch(err){
-        console.error(err);
-        setMsg('로그인 실패: '+(err.code || err.message));
-      }
-    });
-
-    googleBtn?.addEventListener('click',async ()=>{
-      try{
-        setMsg('Google 계정으로 로그인 중...');
-        await signInWithPopup(auth,googleProvider);
-        setMsg('Google 로그인 완료!');
-      }catch(err){
-        console.error(err);
-        setMsg('Google 로그인 실패: '+(err.code || err.message));
-      }
-    });
-
-    // 회원가입 → 태양계 정복 메인 사이트로 이동
-    signupBtn?.addEventListener('click',()=>{
-      window.location.href = 'https://태양계정복.siustudio.kro.kr';
-    });
-
-    logoutBtn?.addEventListener('click',async ()=>{
-      try{
-        await signOut(auth);
-      }catch(err){
-        console.error(err);
+    // 부모창에 로그인 UI 열어달라고 요청
+    parentLoginBtn?.addEventListener('click',()=>{
+      if(window.parent && window.parent !== window){
+        window.parent.postMessage({ source:'siu-space', type:'OPEN_LOGIN_FROM_ECO_SHOP' }, '*');
+      }else{
+        // 단독으로 열렸을 때는 메인 사이트로 보내기
+        window.location.href = 'https://태양계정복.siustudio.kro.kr';
       }
     });
 
     window.startPay = function startPay(packId){
       const user = auth.currentUser;
       if(!user){
-        alert('먼저 로그인해 줘.');
+        alert('먼저 부모창(메인 게임)에서 로그인해 줘.');
         return;
       }
       const p = PACKS[packId];
