@@ -1,116 +1,210 @@
 // /api/payapp/feedback.js
 import admin from 'firebase-admin';
 
-const svc = process.env.FIREBASE_SERVICE_ACCOUNT; // 서비스계정 JSON 전체
+const svc = process.env.FIREBASE_SERVICE_ACCOUNT;
 if (!admin.apps.length) {
+  if (!svc) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT env가 설정되어 있지 않습니다.');
+  }
   admin.initializeApp({
     credential: admin.credential.cert(JSON.parse(svc)),
     databaseURL: 'https://siu-studio-default-rtdb.asia-southeast1.firebasedatabase.app'
   });
 }
 const db = admin.database();
-const LINKVAL = process.env.PAYAPP_LINKVAL;      // PayApp 연동 VALUE(비밀)
 
-// ⚠️ index.html 의 PACKS와 반드시 동일한 구성이어야 합니다.
+// PayApp 상점 설정에서 지정한 비밀 값
+const LINKVAL = process.env.PAYAPP_LINKVAL || '';
+
+// ⚠ index.html 의 PACKS와 반드시 동일
 const PACKS = {
-  'eco-120':  { priceKRW: 1100,  ecoins: 120,  title: '스타터 묶음' },
-  'eco-300':  { priceKRW: 2200,  ecoins: 300,  title: '이벤트코인 작은 자루' },
-  'eco-700':  { priceKRW: 4400,  ecoins: 700,  title: '이벤트코인 중형 자루' },
-  'eco-1600': { priceKRW: 8800,  ecoins: 1600, title: '이벤트코인 대형 자루' },
-  'eco-3600': { priceKRW: 18000, ecoins: 3600, title: '이벤트코인 보물 상자' },
-  'eco-8000': { priceKRW: 39000, ecoins: 8000, title: '이벤트코인 우주 창고' }
+  // 이벤트코인
+  'eco-120':  { kind:'eco',  priceKRW:1100,  ecoins:120,  title:'스타터 묶음' },
+  'eco-300':  { kind:'eco',  priceKRW:2200,  ecoins:300,  title:'이벤트코인 작은 자루' },
+  'eco-700':  { kind:'eco',  priceKRW:4400,  ecoins:700,  title:'이벤트코인 중형 자루' },
+  'eco-1600': { kind:'eco',  priceKRW:8800,  ecoins:1600, title:'이벤트코인 대형 자루' },
+  'eco-3600': { kind:'eco',  priceKRW:18000, ecoins:3600, title:'이벤트코인 보물 상자' },
+  'eco-8000': { kind:'eco',  priceKRW:39000, ecoins:8000, title:'이벤트코인 우주 창고' },
+
+  // 곡괭이 영구 패키지
+  'perk-stone': {
+    kind:'perk', perkType:'pickaxe', perkTier:1,
+    priceKRW:3000, title:'돌 곡괭이 패키지',
+    resourceMult:2, coinMult:2, productionMult:1
+  },
+  'perk-iron': {
+    kind:'perk', perkType:'pickaxe', perkTier:2,
+    priceKRW:7000, title:'철 곡괭이 패키지',
+    resourceMult:3, coinMult:3, productionMult:2
+  },
+  'perk-diamond': {
+    kind:'perk', perkType:'pickaxe', perkTier:3,
+    priceKRW:25600, title:'다이아몬드 곡괭이 패키지',
+    resourceMult:5, coinMult:5, productionMult:7
+  }
 };
 
+// 필요하다면 bodyParser 옵션 조정 가능
+export const config = {
+  api: {
+    bodyParser: true
+  }
+};
 
 export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  const body = req.body || {};
+
+  // PayApp에서 넘어오는 필드들 (필드명은 본인 설정/문서에 맞게 확인 필요)
+  const {
+    result,      // 'success' 등
+    price,       // 결제 금액
+    tid,         // 거래 ID
+    buyerid,     // 프론트에서 setParam('buyerid', uid)
+    var1,        // 프론트에서 setParam('var1', JSON.stringify(meta))
+    linkval,     // 상점 설정의 link_value (이름은 설정에 따라 다를 수 있음)
+    linkVal,
+    value
+  } = body;
+
+  // 비밀값 검증 (설정에 따라 linkval / value 중 실제 넘어오는 필드를 맞춰줘야 함)
+  const linkToken = linkval || linkVal || value || '';
+  if (LINKVAL && linkToken !== LINKVAL) {
+    console.error('[payapp] invalid linkval', linkToken);
+    return res.status(400).send('INVALID_LINKVAL');
+  }
+
+  if (!result || String(result).toLowerCase() !== 'success') {
+    console.log('[payapp] non-success result:', result);
+    // 실패/취소는 그냥 OK만 보고 끝낸다.
+    return res.status(200).send('OK');
+  }
+
+  if (!tid) {
+    console.error('[payapp] missing tid');
+    return res.status(400).send('MISSING_TID');
+  }
+
+  let meta = {};
   try {
-    // 브라우저에서 GET으로 열어보면 단순 응답만
-    if (req.method === 'GET') {
-      return res.status(200).send('SUCCESS');
+    if (typeof var1 === 'string') {
+      meta = JSON.parse(var1);
+    } else if (var1 && typeof var1 === 'object') {
+      meta = var1;
     }
-
-    const p = req.method === 'POST' ? (req.body || {}) : {};
-    console.log('PAYAPP FEEDBACK BODY:', p);
-
-    // 1) 기본 검증 (디버그 중에는 조금 느슨하게)
-    if (!p) return res.status(200).send('SUCCESS');
-
-    if (p.linkval && String(p.linkval) !== LINKVAL) {
-      console.log('BAD LINKVAL:', p.linkval);
-      return res.status(403).send('FORBIDDEN');
-    }
-
-    if (p.userid && String(p.userid).toLowerCase() !== 'siustudio') {
-      console.log('BAD USERID:', p.userid);
-      return res.status(400).send('BAD_USER');
-    }
-
-    const payStateRaw = String(p.pay_state || p.PAY_STATE || p.state || '');
-    const payState = payStateRaw.toLowerCase();
-
-    // pay_state === '1' (요청 생성) 은 승인 전 단계로 보고, 나머지는 승인 처리
-    const approved = (payState !== '1' && payState !== '요청');
-
-    // 승인 전 단계는 단순 SUCCESS 응답만
-    if (!approved) {
-      return res.status(200).send('SUCCESS');
-    }
-
-    const price = Number(p.price || p.PCD_PAY_TOTAL || p.amount || 0);
-    let meta = {};
-    try { meta = JSON.parse(p.var1 || '{}'); } catch (e) {
-      console.log('VAR1 PARSE ERROR:', p.var1, e);
-    }
-    const { uid, packId } = meta;
-    const pack = PACKS[packId];
-
-    if (!uid || !pack) {
-      console.log('BAD_META:', meta);
-      return res.status(200).send('BAD_META');
-    }
-
-    // 테스트 중에는 가격 체크 잠시 끌 수도 있음
-    if (Number(pack.priceKRW) !== price) {
-      console.log('PRICE_MISMATCH:', price, 'vs', pack.priceKRW);
-      return res.status(200).send('PRICE_MISMATCH');
-    }
-
-    // (옵션) 중복 처리 방지: 동일 거래키로 재진입 방지
-    const tid = String(p.tid || p.PCD_PAY_OID || p.PCD_PAY_REQKEY || '');
-    if (tid) {
-      const dupRef = db.ref(`payments/payapp/${tid}`);
-      const dup = await dupRef.get();
-      if (dup.exists()) return res.status(200).send('DUP');
-      await dupRef.set({ uid, packId, price, at: Date.now() });
-    }
-
-    // 2) 유저 본경로 찾기 (userServerMap → users/{server}/{id})
-    const mapSnap = await db.ref(`userServerMap/${uid}`).get();
-    if (!mapSnap.exists()) {
-      console.log('NO_USER_MAP for uid', uid);
-      return res.status(200).send('NO_USER_MAP');
-    }
-    const { server, id } = mapSnap.val() || {};
-    if (!server || !id) {
-      console.log('BAD_USER_MAP:', mapSnap.val());
-      return res.status(200).send('BAD_USER_MAP');
-    }
-
-    // 3) 우편 생성
-    const mailId = `mail_${Date.now()}_${Math.floor(Math.random() * 9999)}`;
-    const mailData = {
-      subject: '이벤트코인 결제 완료',
-      body: `${pack.title} 결제가 확인되었습니다!\n게임 우편함에서 수령해 주세요.`,
-      from: 'system@siustudio.kro.kr',
-      sentAt: Date.now(),
-      rewards: { eventCoins: pack.ecoins }
-    };
-
-    await db.ref(`users/${server}/${id}/mailbox/${mailId}`).set(mailData);
-    console.log('MAIL WRITTEN to', `users/${server}/${id}/mailbox/${mailId}`);
-    return res.status(200).send('SUCCESS');
   } catch (e) {
-    console.error('payapp feedback error', e);
+    console.error('[payapp] failed to parse var1', e);
+  }
+
+  const packId = meta.packId;
+  const pack   = PACKS[packId];
+  if (!pack) {
+    console.error('[payapp] unknown packId', packId);
+    return res.status(400).send('UNKNOWN_PACK');
+  }
+
+  const reqPrice = Number(price || meta.priceKRW);
+  if (pack.priceKRW && reqPrice !== pack.priceKRW) {
+    console.error('[payapp] price mismatch', packId, reqPrice, pack.priceKRW);
+    return res.status(400).send('PRICE_MISMATCH');
+  }
+
+  const uid = meta.uid || buyerid;
+  if (!uid) {
+    console.error('[payapp] missing uid');
+    return res.status(400).send('MISSING_UID');
+  }
+
+  try {
+    // 1) 중복 처리 방지 (tid 단위)
+    const payRef = db.ref(`payments/payapp/${tid}`);
+    const paySnap = await payRef.once('value');
+    if (paySnap.exists()) {
+      console.log('[payapp] already processed tid', tid);
+      return res.status(200).send('OK');
+    }
+
+    await payRef.set({
+      uid,
+      packId,
+      priceKRW: pack.priceKRW,
+      result,
+      createdAt: admin.database.ServerValue.TIMESTAMP
+    });
+
+    // 2) userServerMap에서 server/id 찾기
+    const mapSnap = await db.ref(`userServerMap/${uid}`).once('value');
+    if (!mapSnap.exists()) {
+      console.error('[payapp] userServerMap not found for uid', uid);
+      return res.status(200).send('OK');
+    }
+    const mapVal = mapSnap.val() || {};
+    const server = mapVal.server;
+    const id     = mapVal.id;
+    if (!server || !id) {
+      console.error('[payapp] invalid userServerMap entry', uid, mapVal);
+      return res.status(200).send('OK');
+    }
+
+    // 3) 상품 종류별 처리
+    if (pack.kind === 'eco') {
+      // 이벤트코인 → 우편함 지급
+      const eco = Number(pack.ecoins || 0);
+      if (eco > 0) {
+        const mailboxRef = db.ref(`users/${server}/${id}/mailbox`);
+        const newKey = mailboxRef.push().key;
+        const now = Date.now();
+        const mail = {
+          title: pack.title,
+          body: `PayApp 결제로 이벤트코인 ${eco}개가 지급되었습니다.`,
+          type: 'system',
+          rewards: {
+            eventCoins: eco
+          },
+          meta: {
+            packId,
+            ecoins: eco,
+            priceKRW: pack.priceKRW,
+            tid,
+            src: 'payapp'
+          },
+          sentAt: now,
+          createdAt: now,
+          unread: true
+        };
+        await mailboxRef.child(newKey).set(mail);
+        console.log('[payapp] eco mail created', uid, packId, eco);
+      }
+    } else if (pack.kind === 'perk' && pack.perkType === 'pickaxe') {
+      // 곡괭이 영구 패키지 → perks/pickaxe에 저장
+      const perkRef = db.ref(`users/${server}/${id}/perks/pickaxe`);
+      await perkRef.transaction(cur => {
+        const curTier = cur && cur.tier ? Number(cur.tier) : 0;
+        // 이미 같은 티어 이상이면 덮어쓰지 않음
+        if (pack.perkTier <= curTier) {
+          console.log('[payapp] perk tier not upgraded', { uid, curTier, newTier: pack.perkTier });
+          return cur;
+        }
+        return {
+          tier: pack.perkTier,
+          resourceMult: pack.resourceMult,
+          coinMult: pack.coinMult,
+          productionMult: pack.productionMult,
+          lastPackId: packId,
+          updatedAt: Date.now(),
+          src: 'payapp'
+        };
+      });
+      console.log('[payapp] perk updated', uid, packId);
+    }
+
+    return res.status(200).send('OK');
+  } catch (err) {
+    console.error('[payapp] handler error', err);
     return res.status(500).send('ERROR');
   }
 }
