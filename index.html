@@ -122,7 +122,7 @@
       color:#cbd5f5;
     }
 
-    /* 이미지 없이 우주 분위기 연출 */
+    /* 이미지 없이 우주 분위기 */
     .hero-orbit{
       position:absolute;
       right:-40px;
@@ -242,9 +242,7 @@
       border:1px solid rgba(191,219,254,0.9);
       box-shadow:0 8px 22px rgba(56,189,248,0.5);
     }
-    .btn-primary:hover{
-      filter:brightness(1.06);
-    }
+    .btn-primary:hover{ filter:brightness(1.06); }
     .btn-secondary{
       background:rgba(15,23,42,0.9);
       color:#e5e7eb;
@@ -349,17 +347,9 @@
       border:1px solid rgba(34,197,94,0.6);
       color:#bbf7d0;
     }
-    .pack-amount{
-      color:#e5e7eb;
-    }
-    .pack-price{
-      font-size:11px;
-      color:#9ca3af;
-    }
-    .pack-highlight{
-      font-size:10px;
-      color:#a5b4fc;
-    }
+    .pack-amount{ color:#e5e7eb; }
+    .pack-price{ font-size:11px;color:#9ca3af; }
+    .pack-highlight{ font-size:10px;color:#a5b4fc; }
     .pack-icon{
       position:absolute;
       right:8px;
@@ -375,10 +365,10 @@
       font-size:15px;
     }
     .pack[data-tier="starter"] .pack-icon{border-color:#38bdf8;}
-    .pack[data-tier="bag"] .pack-icon{border-color:#f97316;}
-    .pack[data-tier="bigbag"] .pack-icon{border-color:#facc15;}
-    .pack[data-tier="chest"] .pack-icon{border-color:#a855f7;}
-    .pack[data-tier="vault"] .pack-icon{border-color:#22c55e;}
+    .pack[data-tier="bag"]     .pack-icon{border-color:#f97316;}
+    .pack[data-tier="bigbag"]  .pack-icon{border-color:#facc15;}
+    .pack[data-tier="chest"]   .pack-icon{border-color:#a855f7;}
+    .pack[data-tier="vault"]   .pack-icon{border-color:#22c55e;}
 
     .pack button{
       align-self:flex-start;
@@ -393,6 +383,43 @@
     .pack button:hover{
       border-color:var(--accent);
       color:#f9fafb;
+    }
+
+    /* 곡괭이 패키지 전용 */
+    .pack-perk{
+      background:radial-gradient(circle at top,rgba(56,189,248,0.18),transparent 60%),
+                 rgba(15,23,42,0.97);
+    }
+    .pack-perk.perk-locked{
+      opacity:0.4;
+    }
+    .pack-perk.perk-locked button{
+      opacity:0;
+      pointer-events:none;
+    }
+    .pack-perk.perk-done{
+      border-color:#22c55e;
+      box-shadow:0 0 0 1px rgba(34,197,94,0.5);
+    }
+    .pack-perk.perk-done .pack-tag{
+      background:rgba(34,197,94,0.3);
+      border-color:#22c55e;
+    }
+    .pack-perk.perk-done button{
+      opacity:0;
+      pointer-events:none;
+    }
+    .pack-perk.perk-done::after{
+      content:"구매 완료";
+      position:absolute;
+      right:10px;
+      bottom:8px;
+      font-size:10px;
+      color:#bbf7d0;
+      background:rgba(21,128,61,0.25);
+      border-radius:999px;
+      padding:2px 8px;
+      border:1px solid rgba(34,197,94,0.7);
     }
 
     /* 토스트 */
@@ -419,7 +446,6 @@
       pointer-events:auto;
       transform:translateX(-50%) translateY(0);
     }
-
   </style>
 </head>
 <body>
@@ -431,12 +457,13 @@
         <span class="hero-pill">x2 VALUE</span>
       </div>
       <p class="hero-sub">
-        태양계 정복에서만 사용하는 <strong>이벤트코인</strong>을 미리 충전해서<br/>
-        한정 상점·우주선·배너 이벤트를 더 빠르게 즐겨봐.
+        태양계 정복에서만 사용하는 <strong>이벤트코인</strong>과<br/>
+        <strong>프리미엄 곡괭이 패키지</strong>를 한 곳에서 구매할 수 있어.
       </p>
       <div class="hero-highlight">
         <b>🎁 결제 즉시 우편 지급</b><br/>
-        같은 계정으로 결제하면 게임 우편함으로 바로 지급돼.
+        <strong>게임에서 쓰는 계정과 똑같은 계정</strong>으로 로그인하면<br/>
+        결제 후 같은 계정의 게임 우편함으로 자동 지급돼.
       </div>
       <div class="hero-badges">
         <span class="badge">실시간 우편 지급</span>
@@ -444,7 +471,6 @@
         <span class="badge">게임 계정 연동</span>
       </div>
 
-      <!-- 이미지 대신 CSS 오브젝트로 우주 느낌 -->
       <div class="hero-orbit">
         <div class="orbit-ring"></div>
         <div class="planet planet-main"></div>
@@ -459,7 +485,7 @@
           <div>
             <div class="auth-title">로그인</div>
             <div class="auth-caption">
-              <strong>태양계 정복 게임에서 쓰는 계정</strong>으로만 로그인해 줘.
+              <strong>태양계 정복 게임에서 쓰는 계정</strong>으로 로그인해 줘.
             </div>
           </div>
           <div class="auth-badge">게임 계정 필수</div>
@@ -486,7 +512,7 @@
 
         <div class="login-note">
           ⚠ <strong>반드시 게임에서 쓰는 계정과 같은 계정으로 로그인</strong>해야<br/>
-          이벤트코인이 정확한 게임 우편함으로 지급돼.
+          이벤트코인·패키지가 정확한 게임 우편함과 계정에 적용돼.
         </div>
 
         <div class="msg" id="msg"></div>
@@ -502,6 +528,7 @@
         </div>
       </div>
 
+      <!-- 이벤트코인 상품 -->
       <div class="shop-card" id="shop-card" style="margin-top:10px;opacity:0.35;pointer-events:none;">
         <div class="shop-header">
           <div>
@@ -585,12 +612,70 @@
           </div>
         </div>
       </div>
+
+      <!-- 프리미엄 곡괭이 패키지 -->
+      <div class="shop-card" id="perk-card" style="margin-top:12px;opacity:0.35;pointer-events:none;">
+        <div class="shop-header">
+          <div>
+            <div class="shop-title">프리미엄 곡괭이 패키지</div>
+            <div class="shop-sub">계정 전체에 영구 적용되는 자원·코인·생산 배율</div>
+          </div>
+          <div class="shop-promo">⛏ 순서대로만 구매 가능</div>
+        </div>
+
+        <div class="packs" id="perk-section">
+          <!-- 돌 곡괭이 -->
+          <div class="pack pack-perk" data-perk="stone" id="perk-stone-card">
+            <div class="pack-icon">🪨</div>
+            <div class="pack-name">
+              돌 곡괭이 패키지
+              <span class="pack-tag">1단계</span>
+            </div>
+            <div class="pack-amount">평생 자원 x2 · 코인 x2</div>
+            <div class="pack-price">₩3,000</div>
+            <div class="pack-highlight" id="perk-stone-status">
+              첫 영구 배율 패키지. 이걸 먼저 구매해야 다음 단계가 열려.
+            </div>
+            <button id="perk-stone-btn" onclick="startPay('perk-stone')">₩3,000에 구매</button>
+          </div>
+
+          <!-- 철 곡괭이 -->
+          <div class="pack pack-perk perk-locked" data-perk="iron" id="perk-iron-card">
+            <div class="pack-icon">⛏️</div>
+            <div class="pack-name">
+              철 곡괭이 패키지
+              <span class="pack-tag">2단계</span>
+            </div>
+            <div class="pack-amount">평생 자원 x3 · 코인 x3 · 모든 생산 x2</div>
+            <div class="pack-price">₩7,000</div>
+            <div class="pack-highlight" id="perk-iron-status">
+              돌 곡괭이 패키지를 먼저 구매해야 열려.
+            </div>
+            <button id="perk-iron-btn" onclick="startPay('perk-iron')">₩7,000에 구매</button>
+          </div>
+
+          <!-- 다이아몬드 곡괭이 -->
+          <div class="pack pack-perk perk-locked" data-perk="diamond" id="perk-diamond-card">
+            <div class="pack-icon">💎</div>
+            <div class="pack-name">
+              다이아몬드 곡괭이 패키지
+              <span class="pack-tag">최종</span>
+            </div>
+            <div class="pack-amount">평생 자원 x5 · 코인 x5 · 모든 생산 x7</div>
+            <div class="pack-price">₩25,600</div>
+            <div class="pack-highlight" id="perk-diamond-status">
+              철 곡괭이 패키지를 먼저 구매해야 열려.
+            </div>
+            <button id="perk-diamond-btn" onclick="startPay('perk-diamond')">₩25,600에 구매</button>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 
   <div id="toast"></div>
 
-  <!-- ====== Firebase + 로직 (type=module, body 끝에 위치) ====== -->
+  <!-- ====== Firebase + 로직 ====== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import {
@@ -626,7 +711,10 @@
     const userBox    = document.getElementById('user-box');
     const userLabel  = document.getElementById('user-label');
     const shopCard   = document.getElementById('shop-card');
+    const perkCard   = document.getElementById('perk-card');
     const toastBox   = document.getElementById('toast');
+
+    const PAYAPP_USERID = 'siustudio';
 
     function setMsg(text){
       if(!msgBox) return;
@@ -641,30 +729,157 @@
       }
     }
 
-    const PAYAPP_USERID = 'siustudio';
-
-    // 프론트에서 쓰는 상품 스펙 (백엔드 PACKS와 반드시 맞추기!)
+    // 프론트 상품 정의 (백엔드 PACKS와 반드시 동일)
     const PACKS = {
-      "eco-120":  { priceKRW: 1100,  ecoins: 120,  title: "스타터 묶음" },
-      "eco-300":  { priceKRW: 2200,  ecoins: 300,  title: "이벤트코인 작은 자루" },
-      "eco-700":  { priceKRW: 4400,  ecoins: 700,  title: "이벤트코인 중형 자루" },
-      "eco-1600": { priceKRW: 8800,  ecoins: 1600, title: "이벤트코인 대형 자루" },
-      "eco-3600": { priceKRW: 18000, ecoins: 3600, title: "이벤트코인 보물 상자" },
-      "eco-8000": { priceKRW: 39000, ecoins: 8000, title: "이벤트코인 우주 창고" }
+      // 이벤트코인
+      "eco-120":  { kind:"eco",  priceKRW: 1100,  ecoins: 120,  title: "스타터 묶음" },
+      "eco-300":  { kind:"eco",  priceKRW: 2200,  ecoins: 300,  title: "이벤트코인 작은 자루" },
+      "eco-700":  { kind:"eco",  priceKRW: 4400,  ecoins: 700,  title: "이벤트코인 중형 자루" },
+      "eco-1600": { kind:"eco",  priceKRW: 8800,  ecoins: 1600, title: "이벤트코인 대형 자루" },
+      "eco-3600": { kind:"eco",  priceKRW: 18000, ecoins: 3600, title: "이벤트코인 보물 상자" },
+      "eco-8000": { kind:"eco",  priceKRW: 39000, ecoins: 8000, title: "이벤트코인 우주 창고" },
+
+      // 곡괭이 영구 패키지
+      "perk-stone": {
+        kind: "perk",
+        perkType: "pickaxe",
+        perkTier: 1,
+        priceKRW: 3000,
+        title: "돌 곡괭이 패키지",
+        description: "평생 자원 x2 · 코인 x2",
+        resourceMult: 2,
+        coinMult: 2,
+        productionMult: 1
+      },
+      "perk-iron": {
+        kind: "perk",
+        perkType: "pickaxe",
+        perkTier: 2,
+        priceKRW: 7000,
+        title: "철 곡괭이 패키지",
+        description: "평생 자원 x3 · 코인 x3 · 모든 생산 x2",
+        resourceMult: 3,
+        coinMult: 3,
+        productionMult: 2
+      },
+      "perk-diamond": {
+        kind: "perk",
+        perkType: "pickaxe",
+        perkTier: 3,
+        priceKRW: 25600,
+        title: "다이아몬드 곡괭이 패키지",
+        description: "평생 자원 x5 · 코인 x5 · 모든 생산 x7",
+        resourceMult: 5,
+        coinMult: 5,
+        productionMult: 7
+      }
     };
 
     function enableShop(enabled){
-      if(!shopCard) return;
-      if(enabled){
-        shopCard.style.opacity = '1';
-        shopCard.style.pointerEvents = 'auto';
-      }else{
-        shopCard.style.opacity = '0.35';
-        shopCard.style.pointerEvents = 'none';
-      }
+      [shopCard, perkCard].forEach(card=>{
+        if(!card) return;
+        if(enabled){
+          card.style.opacity = '1';
+          card.style.pointerEvents = 'auto';
+        }else{
+          card.style.opacity = '0.35';
+          card.style.pointerEvents = 'none';
+        }
+      });
     }
 
     let mailboxListenerAttached = false;
+    let currentPickaxeTier = 0;
+
+    function updatePerkUI(tier){
+      currentPickaxeTier = tier || 0;
+
+      const stoneCard   = document.getElementById('perk-stone-card');
+      const ironCard    = document.getElementById('perk-iron-card');
+      const diamondCard = document.getElementById('perk-diamond-card');
+
+      const stoneStatus   = document.getElementById('perk-stone-status');
+      const ironStatus    = document.getElementById('perk-iron-status');
+      const diamondStatus = document.getElementById('perk-diamond-status');
+
+      const stoneBtn   = document.getElementById('perk-stone-btn');
+      const ironBtn    = document.getElementById('perk-iron-btn');
+      const diamondBtn = document.getElementById('perk-diamond-btn');
+
+      [stoneCard, ironCard, diamondCard].forEach(c=>{
+        if(!c) return;
+        c.classList.remove('perk-locked','perk-done');
+      });
+
+      function lock(btn){ if(btn){ btn.style.opacity='0'; btn.style.pointerEvents='none'; } }
+      function unlock(btn){ if(btn){ btn.style.opacity='1'; btn.style.pointerEvents='auto'; } }
+
+      // 기본 잠금 상태
+      if(ironCard)    ironCard.classList.add('perk-locked');
+      if(diamondCard) diamondCard.classList.add('perk-locked');
+
+      unlock(stoneBtn);
+      lock(ironBtn);
+      lock(diamondBtn);
+
+      if(stoneStatus){
+        stoneStatus.textContent = '첫 영구 배율 패키지. 이걸 먼저 구매해야 다음 단계가 열려.';
+      }
+      if(ironStatus){
+        ironStatus.textContent = '돌 곡괭이 패키지를 먼저 구매해야 열려.';
+      }
+      if(diamondStatus){
+        diamondStatus.textContent = '철 곡괭이 패키지를 먼저 구매해야 열려.';
+      }
+
+      if(currentPickaxeTier === 0){
+        // 돌만 구매 가능 (기본 상태 그대로)
+      }else if(currentPickaxeTier === 1){
+        if(stoneCard) stoneCard.classList.add('perk-done');
+        if(ironCard)  ironCard.classList.remove('perk-locked');
+        lock(stoneBtn);
+        unlock(ironBtn);
+        if(ironStatus){
+          ironStatus.textContent = '이제 평생 자원 x3 · 코인 x3 · 모든 생산 x2를 추가할 수 있어.';
+        }
+      }else if(currentPickaxeTier === 2){
+        if(stoneCard)   stoneCard.classList.add('perk-done');
+        if(ironCard)    ironCard.classList.add('perk-done');
+        if(diamondCard) diamondCard.classList.remove('perk-locked');
+        lock(stoneBtn);
+        lock(ironBtn);
+        unlock(diamondBtn);
+        if(diamondStatus){
+          diamondStatus.textContent = '최종 단계. 평생 자원 x5 · 코인 x5 · 모든 생산 x7까지 올라가.';
+        }
+      }else if(currentPickaxeTier >= 3){
+        if(stoneCard)   stoneCard.classList.add('perk-done');
+        if(ironCard)    ironCard.classList.add('perk-done');
+        if(diamondCard) diamondCard.classList.add('perk-done');
+        lock(stoneBtn);
+        lock(ironBtn);
+        lock(diamondBtn);
+        if(diamondStatus){
+          diamondStatus.textContent = '최대 레벨에 도달했습니다. 감사합니다!';
+        }
+      }
+    }
+
+    async function loadPerks(server,id){
+      try{
+        const perkRef = ref(db,`users/${server}/${id}/perks/pickaxe`);
+        const perkSnap = await get(perkRef);
+        let tier = 0;
+        if(perkSnap.exists()){
+          const val = perkSnap.val() || {};
+          tier = Number(val.tier || 0);
+        }
+        updatePerkUI(tier);
+      }catch(err){
+        console.error(err);
+        updatePerkUI(0);
+      }
+    }
 
     async function attachMailboxListener(user){
       if(!user || mailboxListenerAttached) return;
@@ -684,6 +899,11 @@
           setMsg('게임 계정 매핑 정보에 문제가 있어.');
           return;
         }
+
+        // 곡괭이 패키지 상태 로드
+        await loadPerks(server,id);
+
+        // 우편함 리스너 (이벤트코인 지급 감지)
         const mailboxRef = ref(db,`users/${server}/${id}/mailbox`);
         let prevIds = new Set();
         onValue(mailboxRef,(snap)=>{
@@ -721,6 +941,7 @@
           }
           showToast('새 우편이 도착했습니다. 태양계 정복 게임의 우편함을 확인해 줘.',6000);
         });
+
         setMsg('로그인 완료. 게임 우편함과 연동되었습니다.');
       }catch(err){
         console.error(err);
@@ -728,7 +949,7 @@
       }
     }
 
-    // 부모창에 "상점 프레임 준비 완료" 신호(필요 없으면 무시해도 됨)
+    // 필요하면 부모창에서 받을 수 있도록 알림
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({ source:'siu-space', type:'ECO_SHOP_READY' }, '*');
     }
@@ -749,7 +970,6 @@
         enableShop(true);
         attachMailboxListener(user);
 
-        // 로그인 시 알림
         showToast('⚠ 게임과 같은 계정으로 로그인되어 있어야 정확하게 지급됩니다. 지금 로그인된 계정으로 결제가 진행됩니다.',7000);
       }else{
         if(loginForm){
@@ -763,7 +983,9 @@
           userLabel.textContent = '';
         }
         enableShop(false);
-        setMsg('이벤트코인 구매를 하려면 먼저 로그인해 줘.');
+        mailboxListenerAttached = false;
+        updatePerkUI(0);
+        setMsg('이벤트코인·패키지를 구매하려면 먼저 로그인해 줘.');
       }
     });
 
@@ -778,7 +1000,6 @@
       try{
         setMsg('로그인 중...');
         await signInWithEmailAndPassword(auth,email,pw);
-        // 성공하면 onAuthStateChanged에서 알림 + 메시지 처리
       }catch(err){
         console.error(err);
         setMsg('로그인 실패: '+(err.code || err.message));
@@ -790,7 +1011,6 @@
         setMsg('Google 계정으로 로그인 중...');
         const provider = new GoogleAuthProvider();
         await signInWithPopup(auth,provider);
-        // 성공 시 onAuthStateChanged에서 처리
       }catch(err){
         console.error(err);
         setMsg('Google 로그인 실패: '+(err.code || err.message));
@@ -816,16 +1036,41 @@
         alert('알 수 없는 상품입니다.');
         return;
       }
+
+      // 곡괭이 패키지 순서 제한
+      if(p.kind === 'perk' && p.perkType === 'pickaxe'){
+        const tier = p.perkTier;
+        if(tier === 1 && currentPickaxeTier >= 1){
+          alert('돌 곡괭이 패키지는 이미 구매된 것으로 보입니다.');
+          return;
+        }
+        if(tier === 2 && currentPickaxeTier < 1){
+          alert('먼저 돌 곡괭이 패키지를 구매해야 합니다.');
+          return;
+        }
+        if(tier === 3 && currentPickaxeTier < 2){
+          alert('먼저 철 곡괭이 패키지를 구매해야 합니다.');
+          return;
+        }
+        if(tier <= currentPickaxeTier){
+          alert('이미 이 단계 이상의 곡괭이 패키지를 구매했습니다.');
+          return;
+        }
+      }
+
       const redirect = new URL('/',location.origin);
       redirect.hash = '#pay-done';
 
       const meta = {
-        v:1,
-        uid:user.uid,
+        v: 2,
+        uid: user.uid,
         packId,
-        ecoins:p.ecoins,
-        priceKRW:p.priceKRW,
-        t:Date.now()
+        kind: p.kind,
+        priceKRW: p.priceKRW,
+        ecoins: p.ecoins || 0,
+        perkType: p.perkType || null,
+        perkTier: p.perkTier || null,
+        t: Date.now()
       };
 
       try{
@@ -845,6 +1090,10 @@
         alert('결제를 시작하는 중 오류가 발생했습니다.');
       }
     };
+
+    // 초기 UI
+    updatePerkUI(0);
+    enableShop(false);
   </script>
 </body>
 </html>
