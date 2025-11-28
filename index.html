@@ -67,8 +67,9 @@
 
     .hero{
       position:relative;
-      padding:8px 4px 8px 2px;
+      padding:10px 8px 12px 4px;
       overflow:hidden;
+      border-radius:18px;
     }
     .hero-title{
       display:flex;
@@ -91,6 +92,7 @@
       font-size:13px;
       color:#9ca3af;
       line-height:1.5;
+      max-width:360px;
     }
     .hero-sub strong{
       color:#e5e7eb;
@@ -171,6 +173,7 @@
       display:flex;
       flex-direction:column;
       gap:10px;
+      backdrop-filter:blur(18px);
     }
     .auth-header{
       display:flex;
@@ -235,6 +238,7 @@
       align-items:center;
       gap:4px;
       white-space:nowrap;
+      transition:transform .14s ease-out,box-shadow .14s ease-out,filter .14s ease-out;
     }
     .btn-primary{
       background:linear-gradient(135deg,#38bdf8,#6366f1);
@@ -242,11 +246,20 @@
       border:1px solid rgba(191,219,254,0.9);
       box-shadow:0 8px 22px rgba(56,189,248,0.5);
     }
-    .btn-primary:hover{ filter:brightness(1.06); }
+    .btn-primary:hover{
+      filter:brightness(1.06);
+      transform:translateY(-1px);
+      box-shadow:0 12px 26px rgba(56,189,248,0.7);
+    }
     .btn-secondary{
       background:rgba(15,23,42,0.9);
       color:#e5e7eb;
       border:1px solid rgba(148,163,184,0.7);
+    }
+    .btn-secondary:hover{
+      filter:brightness(1.04);
+      transform:translateY(-1px);
+      box-shadow:0 8px 20px rgba(15,23,42,0.8);
     }
 
     .msg{
@@ -289,6 +302,7 @@
       border-radius:18px;
       border:1px solid var(--border-soft);
       padding:12px 12px 10px;
+      backdrop-filter:blur(18px);
     }
     .shop-header{
       display:flex;
@@ -307,6 +321,7 @@
     .shop-promo{
       font-size:11px;
       color:#fde68a;
+      text-align:right;
     }
 
     .packs{
@@ -314,27 +329,37 @@
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:8px;
+      align-items:stretch;
     }
     @media (min-width:900px){
       .packs{
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
+
     .pack{
       position:relative;
-      padding:9px 9px 9px;
-      border-radius:14px;
-      background:radial-gradient(circle at top,rgba(56,189,248,0.09),transparent 60%),
-                 rgba(15,23,42,0.95);
+      padding:11px 11px 10px;
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top,rgba(56,189,248,0.10),transparent 60%),
+        rgba(15,23,42,0.96);
       border:1px solid rgba(148,163,184,0.7);
       display:flex;
       flex-direction:column;
-      gap:5px;
+      gap:6px;
       font-size:11px;
+      box-shadow:0 10px 30px rgba(15,23,42,0.75);
+      transition:transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+    }
+    .pack:hover{
+      transform:translateY(-4px);
+      border-color:var(--accent);
+      box-shadow:0 16px 40px rgba(15,23,42,0.9);
     }
     .pack-name{
       font-weight:600;
-      font-size:12px;
+      font-size:13px;
       display:flex;
       align-items:center;
       gap:5px;
@@ -347,28 +372,77 @@
       border:1px solid rgba(34,197,94,0.6);
       color:#bbf7d0;
     }
-    .pack-amount{ color:#e5e7eb; }
-    .pack-price{ font-size:11px;color:#9ca3af; }
-    .pack-highlight{ font-size:10px;color:#a5b4fc; }
+    .pack-amount{
+      color:#e5e7eb;
+      font-size:13px;
+      font-weight:600;
+    }
+    .pack-price{
+      font-size:11px;
+      color:#9ca3af;
+      opacity:0.95;
+    }
+    .pack-highlight{
+      font-size:10px;
+      color:#a5b4fc;
+    }
     .pack-icon{
       position:absolute;
-      right:8px;
-      top:7px;
-      width:26px;
-      height:26px;
+      right:10px;
+      top:8px;
+      width:28px;
+      height:28px;
       border-radius:999px;
-      background:rgba(15,23,42,0.9);
+      background:rgba(15,23,42,0.92);
       border:1px solid rgba(148,163,184,0.7);
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:15px;
+      font-size:16px;
+      box-shadow:0 0 18px rgba(15,23,42,0.9);
     }
     .pack[data-tier="starter"] .pack-icon{border-color:#38bdf8;}
     .pack[data-tier="bag"]     .pack-icon{border-color:#f97316;}
     .pack[data-tier="bigbag"]  .pack-icon{border-color:#facc15;}
     .pack[data-tier="chest"]   .pack-icon{border-color:#a855f7;}
     .pack[data-tier="vault"]   .pack-icon{border-color:#22c55e;}
+
+    /* 강조 배지 (Most popular / Best value) */
+    .pack[data-feature="popular"]::before,
+    .pack[data-feature="best"]::before{
+      position:absolute;
+      left:-1px;
+      top:8px;
+      padding:2px 8px 3px;
+      border-radius:0 999px 999px 0;
+      font-size:10px;
+      font-weight:600;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+      color:#020617;
+    }
+    .pack[data-feature="popular"]::before{
+      content:"MOST POPULAR";
+      background:linear-gradient(135deg,#f97316,#facc15);
+    }
+    .pack[data-feature="best"]::before{
+      content:"BEST VALUE";
+      background:linear-gradient(135deg,#22c55e,#a3e635);
+    }
+
+    /* 울트라 티어 강조 */
+    .pack[data-tier="ultra"]{
+      border-color:rgba(56,189,248,0.9);
+      box-shadow:0 0 0 1px rgba(56,189,248,0.4),0 16px 40px rgba(15,23,42,0.9);
+    }
+    .pack[data-tier="ultra"] .pack-icon{
+      border-color:#38bdf8;
+    }
+    .pack[data-tier="ultra"] .pack-tag{
+      background:rgba(56,189,248,0.22);
+      border-color:#38bdf8;
+      color:#e0f2fe;
+    }
 
     .pack button{
       align-self:flex-start;
@@ -383,6 +457,8 @@
     .pack button:hover{
       border-color:var(--accent);
       color:#f9fafb;
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(15,23,42,0.85);
     }
 
     /* 곡괭이 패키지 전용 */
@@ -563,7 +639,7 @@
             <button onclick="startPay('eco-300')">300 EC 구매</button>
           </div>
 
-          <div class="pack" data-tier="bag">
+          <div class="pack" data-tier="bag" data-feature="popular">
             <div class="pack-icon">🧺</div>
             <div class="pack-name">
               중형 자루
@@ -599,7 +675,7 @@
             <button onclick="startPay('eco-3600')">3,600 EC 구매</button>
           </div>
 
-          <div class="pack" data-tier="vault">
+          <div class="pack" data-tier="vault" data-feature="best">
             <div class="pack-icon">🏦</div>
             <div class="pack-name">
               우주 창고
@@ -609,6 +685,32 @@
             <div class="pack-price">₩39,000 · 장기 투자용</div>
             <div class="pack-highlight">장기적인 한정 콘텐츠 대비, 최대 혜택.</div>
             <button onclick="startPay('eco-8000')">8,000 EC 구매</button>
+          </div>
+
+          <!-- 새 상품 1: 코스믹 번들 -->
+          <div class="pack" data-tier="chest">
+            <div class="pack-icon">🌌</div>
+            <div class="pack-name">
+              코스믹 번들
+              <span class="pack-tag">장기 이벤트</span>
+            </div>
+            <div class="pack-amount">이벤트코인 5,000개</div>
+            <div class="pack-price">₩25,000 · 이벤트 시즌 대비용</div>
+            <div class="pack-highlight">여러 시즌을 한 번에 준비하는 꾸준한 유저에게 적당한 구성.</div>
+            <button onclick="startPay('eco-5000')">5,000 EC 구매</button>
+          </div>
+
+          <!-- 새 상품 2: 갤럭시 창고 -->
+          <div class="pack" data-tier="ultra">
+            <div class="pack-icon">🌀</div>
+            <div class="pack-name">
+              갤럭시 창고
+              <span class="pack-tag">ULTRA</span>
+            </div>
+            <div class="pack-amount">이벤트코인 12,000개</div>
+            <div class="pack-price">₩69,000 · 최상위 유저용</div>
+            <div class="pack-highlight">장기간 모든 이벤트를 여유 있게 즐기고 싶은 유저를 위한 최상위 패키지.</div>
+            <button onclick="startPay('eco-12000')">12,000 EC 구매</button>
           </div>
         </div>
       </div>
@@ -738,6 +840,10 @@
       "eco-1600": { kind:"eco",  priceKRW: 8800,  ecoins: 1600, title: "이벤트코인 대형 자루" },
       "eco-3600": { kind:"eco",  priceKRW: 18000, ecoins: 3600, title: "이벤트코인 보물 상자" },
       "eco-8000": { kind:"eco",  priceKRW: 39000, ecoins: 8000, title: "이벤트코인 우주 창고" },
+
+      // 새 이벤트코인 상품
+      "eco-5000": { kind:"eco",  priceKRW: 25000, ecoins: 5000,  title: "코스믹 번들" },
+      "eco-12000":{ kind:"eco",  priceKRW: 69000, ecoins: 12000, title: "갤럭시 창고" },
 
       // 곡괭이 영구 패키지
       "perk-stone": {
