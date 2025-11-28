@@ -10,52 +10,120 @@
 
   <style>
     :root{
-      --bg-gradient: radial-gradient(circle at top left,#1f2937,#020617 60%);
-      --card-bg: rgba(15,23,42,0.88);
+      /* 전체 우주 배경 톤 */
+      --bg-gradient:
+        radial-gradient(circle at 0% 0%, #1e293b 0, transparent 55%),
+        radial-gradient(circle at 100% 0%, #4c1d95 0, transparent 60%),
+        radial-gradient(circle at 0% 100%, #15803d 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #0ea5e9 0, transparent 55%),
+        linear-gradient(160deg,#020617,#020617 55%,#020617);
+
+      --card-bg: rgba(15,23,42,0.86);
       --accent: #38bdf8;
       --accent-soft: rgba(56,189,248,0.18);
       --border-soft: rgba(148,163,184,0.35);
       --danger: #f97373;
     }
+
     *{box-sizing:border-box;margin:0;padding:0}
+
     body{
       min-height:100vh;
       margin:0;
       font-family:system-ui,Apple SD Gothic Neo,Segoe UI,Roboto,sans-serif;
-      background:var(--bg-gradient);
+      background-color:#020617;
+      background-image:var(--bg-gradient);
+      background-repeat:no-repeat;
+      background-size:cover;
       color:#e5e7eb;
       display:flex;
       align-items:center;
       justify-content:center;
       padding:24px 12px;
+      position:relative;
+      overflow:hidden;
     }
+
+    /* 별/노이즈 레이어 */
+    body::before{
+      content:'';
+      position:fixed;
+      inset:-20%;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(248,250,252,0.18) 0, transparent 55%),
+        radial-gradient(circle at 80% 10%, rgba(191,219,254,0.14) 0, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(52,211,153,0.15) 0, transparent 60%);
+      mix-blend-mode:screen;
+      opacity:0.9;
+      z-index:-3;
+      pointer-events:none;
+      filter:blur(2px);
+    }
+    body::after{
+      content:'';
+      position:fixed;
+      inset:-10%;
+      background-image:radial-gradient(#ffffff40 1px, transparent 1px);
+      background-size:2px 2px;
+      opacity:0.14;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-2;
+    }
+
     .shell{
       position:relative;
       width:100%;
-      max-width:960px;
-      border-radius:24px;
-      background:linear-gradient(135deg,rgba(15,23,42,0.97),rgba(15,23,42,0.9));
-      box-shadow:0 24px 70px rgba(15,23,42,0.9);
-      border:1px solid rgba(148,163,184,0.45);
-      padding:20px;
+      max-width:980px;
+      border-radius:26px;
+      background:linear-gradient(145deg,rgba(15,23,42,0.96),rgba(15,23,42,0.86));
+      box-shadow:0 28px 80px rgba(15,23,42,0.95);
+      border:1px solid rgba(148,163,184,0.55);
+      padding:22px;
       display:grid;
-      gap:18px;
+      gap:20px;
       overflow:hidden;
+      backdrop-filter:blur(26px) saturate(1.35);
+      -webkit-backdrop-filter:blur(26px) saturate(1.35);
     }
+    /* 네온 테두리 */
     .shell::before{
       content:'';
       position:absolute;
-      inset:0;
+      inset:-1px;
       border-radius:inherit;
       padding:1px;
-      background:linear-gradient(135deg,rgba(56,189,248,0.7),rgba(129,140,248,0.5),rgba(45,212,191,0.7));
+      background:conic-gradient(
+        from 210deg,
+        rgba(56,189,248,0.0),
+        rgba(56,189,248,0.45),
+        rgba(129,140,248,0.65),
+        rgba(45,212,191,0.6),
+        rgba(56,189,248,0.0)
+      );
       -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
       -webkit-mask-composite:xor;
       mask-composite:exclude;
+      opacity:0.9;
       pointer-events:none;
-      opacity:0.65;
+    }
+    /* 카드 뒤쪽 오로라 */
+    .shell::after{
+      content:'';
+      position:absolute;
+      right:-120px;
+      top:-120px;
+      width:360px;
+      height:360px;
+      border-radius:999px;
+      background:radial-gradient(circle at 30% 20%,rgba(59,130,246,0.7),transparent 65%),
+                 radial-gradient(circle at 70% 70%,rgba(244,114,182,0.65),transparent 60%);
+      opacity:0.55;
+      filter:blur(2px);
+      pointer-events:none;
+      z-index:-1;
     }
 
     @media (min-width:768px){
@@ -67,10 +135,26 @@
 
     .hero{
       position:relative;
-      padding:10px 8px 12px 4px;
+      padding:14px 12px 16px 6px;
       overflow:hidden;
-      border-radius:18px;
+      border-radius:20px;
+      background:linear-gradient(155deg,rgba(15,23,42,0.05),rgba(15,23,42,0.6));
+      border:1px solid rgba(51,65,85,0.8);
     }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(59,130,246,0.35),transparent 60%),
+        radial-gradient(circle at 100% 20%,rgba(244,114,182,0.35),transparent 55%);
+      opacity:0.7;
+      mix-blend-mode:screen;
+      pointer-events:none;
+      z-index:-1;
+    }
+
     .hero-title{
       display:flex;
       align-items:center;
@@ -86,12 +170,13 @@
       background:rgba(34,197,94,0.16);
       border:1px solid rgba(34,197,94,0.7);
       color:#bbf7d0;
+      box-shadow:0 0 16px rgba(34,197,94,0.4);
     }
     .hero-sub{
       margin-top:10px;
       font-size:13px;
       color:#9ca3af;
-      line-height:1.5;
+      line-height:1.6;
       max-width:360px;
     }
     .hero-sub strong{
@@ -101,10 +186,10 @@
       margin-top:12px;
       padding:10px 12px;
       border-radius:14px;
-      background:linear-gradient(135deg,rgba(8,47,73,0.9),rgba(30,64,175,0.85));
+      background:linear-gradient(135deg,rgba(8,47,73,0.95),rgba(30,64,175,0.9));
       border:1px solid rgba(56,189,248,0.8);
       font-size:13px;
-      box-shadow:0 12px 35px rgba(15,23,42,0.9);
+      box-shadow:0 16px 40px rgba(15,23,42,0.95);
     }
     .hero-highlight b{
       color:#e0f2fe;
@@ -119,29 +204,31 @@
     .badge{
       padding:3px 8px;
       border-radius:999px;
-      border:1px solid rgba(148,163,184,0.45);
-      background:rgba(15,23,42,0.82);
+      border:1px solid rgba(148,163,184,0.6);
+      background:rgba(15,23,42,0.8);
       color:#cbd5f5;
+      backdrop-filter:blur(10px);
     }
 
-    /* 이미지 없이 우주 분위기 */
+    /* 오른쪽 뒤에 도는 궤도/행성들 */
     .hero-orbit{
       position:absolute;
-      right:-40px;
+      right:-32px;
       bottom:-40px;
-      width:220px;
-      height:220px;
+      width:260px;
+      height:260px;
       background:
-        radial-gradient(circle at 30% 20%,rgba(56,189,248,0.6),transparent 60%),
-        radial-gradient(circle at 80% 80%,rgba(249,115,22,0.55),transparent 55%);
+        radial-gradient(circle at 40% 15%,rgba(56,189,248,0.8),transparent 60%),
+        radial-gradient(circle at 80% 80%,rgba(249,115,22,0.7),transparent 55%);
       opacity:0.9;
       pointer-events:none;
+      filter:blur(0.5px);
     }
     .orbit-ring{
       position:absolute;
-      inset:34px;
+      inset:40px;
       border-radius:999px;
-      border:1px dashed rgba(148,163,184,0.4);
+      border:1px dashed rgba(148,163,184,0.8);
       box-shadow:0 0 24px rgba(15,23,42,0.9) inset;
     }
     .planet{
@@ -149,20 +236,20 @@
       border-radius:999px;
     }
     .planet-main{
-      width:46px;
-      height:46px;
-      right:60px;
-      top:32px;
+      width:52px;
+      height:52px;
+      right:70px;
+      top:26px;
       background:radial-gradient(circle at 30% 20%,#facc15,#f97316);
-      box-shadow:0 0 28px rgba(250,204,21,0.7);
+      box-shadow:0 0 32px rgba(250,204,21,0.9);
     }
     .planet-sub{
-      width:26px;
-      height:26px;
+      width:30px;
+      height:30px;
       right:18px;
-      bottom:52px;
+      bottom:60px;
       background:radial-gradient(circle at 30% 20%,#38bdf8,#6366f1);
-      box-shadow:0 0 20px rgba(56,189,248,0.8);
+      box-shadow:0 0 24px rgba(56,189,248,0.9);
     }
 
     .auth-card{
@@ -174,6 +261,7 @@
       flex-direction:column;
       gap:10px;
       backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
     }
     .auth-header{
       display:flex;
@@ -303,6 +391,7 @@
       border:1px solid var(--border-soft);
       padding:12px 12px 10px;
       backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
     }
     .shop-header{
       display:flex;
@@ -342,8 +431,8 @@
       padding:11px 11px 10px;
       border-radius:16px;
       background:
-        radial-gradient(circle at top,rgba(56,189,248,0.10),transparent 60%),
-        rgba(15,23,42,0.96);
+        radial-gradient(circle at 0 0,rgba(56,189,248,0.20),transparent 60%),
+        rgba(15,23,42,0.97);
       border:1px solid rgba(148,163,184,0.7);
       display:flex;
       flex-direction:column;
