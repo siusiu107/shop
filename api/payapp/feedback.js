@@ -57,6 +57,20 @@ const PACKS = {
     title: '이벤트코인 우주 창고',
   },
 
+  // 🔹 새로 추가한 이벤트코인 상품들 (프론트와 동일)
+  'eco-5000': {
+    kind: 'eco',
+    priceKRW: 25000,
+    ecoins: 5000,
+    title: '코스믹 번들',
+  },
+  'eco-12000': {
+    kind: 'eco',
+    priceKRW: 69000,
+    ecoins: 12000,
+    title: '갤럭시 창고',
+  },
+
   // 곡괭이 영구 패키지
   'perk-stone': {
     kind: 'perk',
