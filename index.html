@@ -67,7 +67,7 @@
 
     .hero{
       position:relative;
-      padding:4px 8px 12px 4px; /* 위로 조금 올림 */
+      padding:4px 8px 12px 4px; /* 위로 당김 */
       overflow:hidden;
       border-radius:18px;
     }
@@ -88,11 +88,11 @@
       color:#bbf7d0;
     }
     .hero-sub{
-      margin-top:6px; /* 설명을 더 위로 붙임 */
+      margin-top:6px;
       font-size:13px;
       color:#9ca3af;
       line-height:1.5;
-      max-width:none; /* 한 줄 느낌 나게 제약 제거 */
+      max-width:none; /* 한 줄 느낌 */
     }
     .hero-sub strong{
       color:#e5e7eb;
@@ -357,12 +357,16 @@
       border-color:var(--accent);
       box-shadow:0 16px 40px rgba(15,23,42,0.9);
     }
+
+    /* 여기 padding-right를 줘서 오른쪽 아이콘과 글자가 안 겹치게 */
     .pack-name{
       font-weight:600;
       font-size:13px;
       display:flex;
       align-items:center;
       gap:5px;
+      padding-right:44px;
+      flex-wrap:wrap;
     }
     .pack-tag{
       font-size:10px;
@@ -678,7 +682,7 @@
             <div class="pack-icon">🏦</div>
             <div class="pack-name">
               우주 창고
-              <span class="pack-tag">MAX VALUE</span>
+              <span class="pack-tag">최고 가치</span> <!-- MAX VALUE 대신 한글로 변경 -->
             </div>
             <div class="pack-amount">이벤트코인 8,000개</div>
             <div class="pack-price">₩39,000 · 장기 투자용</div>
@@ -941,7 +945,7 @@
       }
 
       if(currentPickaxeTier === 0){
-        // 돌만 구매 가능 (기본 상태 그대로)
+        // 기본 상태
       }else if(currentPickaxeTier === 1){
         if(stoneCard) stoneCard.classList.add('perk-done');
         if(ironCard)  ironCard.classList.remove('perk-locked');
@@ -1067,13 +1071,13 @@
         if(loginForm){
           loginForm.style.opacity = '0.45';
           loginForm.style.pointerEvents = 'none';
-          loginForm.style.display = 'none';   // 로그인 완료 시 폼 숨김
+          loginForm.style.display = 'none';   // 로그인 후 폼 안 보이게
         }
         if(authHeader){
-          authHeader.style.display = 'none';  // "로그인" 헤더 숨김
+          authHeader.style.display = 'none';
         }
         if(loginNote){
-          loginNote.style.display = 'none';   // 경고 문구 숨김
+          loginNote.style.display = 'none';
         }
         if(userBox){
           userBox.style.display = 'flex';
@@ -1090,7 +1094,7 @@
         if(loginForm){
           loginForm.style.opacity = '1';
           loginForm.style.pointerEvents = 'auto';
-          loginForm.style.display = 'block';  // 로그아웃 시 다시 보이게
+          loginForm.style.display = 'block';
         }
         if(authHeader){
           authHeader.style.display = '';
