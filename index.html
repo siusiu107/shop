@@ -67,7 +67,7 @@
 
     .hero{
       position:relative;
-      padding:10px 8px 12px 4px;
+      padding:4px 8px 12px 4px; /* 위로 조금 올림 */
       overflow:hidden;
       border-radius:18px;
     }
@@ -88,11 +88,11 @@
       color:#bbf7d0;
     }
     .hero-sub{
-      margin-top:10px;
+      margin-top:6px; /* 설명을 더 위로 붙임 */
       font-size:13px;
       color:#9ca3af;
       line-height:1.5;
-      max-width:360px;
+      max-width:none; /* 한 줄 느낌 나게 제약 제거 */
     }
     .hero-sub strong{
       color:#e5e7eb;
@@ -533,8 +533,7 @@
         <span class="hero-pill">x2 VALUE</span>
       </div>
       <p class="hero-sub">
-        태양계 정복에서만 사용하는 <strong>이벤트코인</strong>과<br/>
-        <strong>프리미엄 곡괭이 패키지</strong>를 한 곳에서 구매할 수 있어.
+        태양계 정복에서 사용하는 <strong>이벤트코인</strong>과 <strong>프리미엄 곡괭이 패키지</strong>를 구매하는 공식 상점이야.
       </p>
       <div class="hero-highlight">
         <b>🎁 결제 즉시 우편 지급</b><br/>
@@ -815,6 +814,9 @@
     const shopCard   = document.getElementById('shop-card');
     const perkCard   = document.getElementById('perk-card');
     const toastBox   = document.getElementById('toast');
+    const authCard   = document.getElementById('auth-card');
+    const authHeader = authCard?.querySelector('.auth-header');
+    const loginNote  = authCard?.querySelector('.login-note');
 
     const PAYAPP_USERID = 'siustudio';
 
@@ -1065,6 +1067,13 @@
         if(loginForm){
           loginForm.style.opacity = '0.45';
           loginForm.style.pointerEvents = 'none';
+          loginForm.style.display = 'none';   // 로그인 완료 시 폼 숨김
+        }
+        if(authHeader){
+          authHeader.style.display = 'none';  // "로그인" 헤더 숨김
+        }
+        if(loginNote){
+          loginNote.style.display = 'none';   // 경고 문구 숨김
         }
         if(userBox){
           userBox.style.display = 'flex';
@@ -1081,6 +1090,13 @@
         if(loginForm){
           loginForm.style.opacity = '1';
           loginForm.style.pointerEvents = 'auto';
+          loginForm.style.display = 'block';  // 로그아웃 시 다시 보이게
+        }
+        if(authHeader){
+          authHeader.style.display = '';
+        }
+        if(loginNote){
+          loginNote.style.display = '';
         }
         if(userBox){
           userBox.style.display = 'none';
