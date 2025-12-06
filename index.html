@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>태양계 정복 – 이벤트코인 관리센터</title>
+  <title>이벤트코인 스토어</title>
 
   <!-- PayApp Lite -->
   <script src="https://lite.payapp.kr/public/api/v2/payapp-lite.js"></script>
@@ -15,7 +15,6 @@
       --accent: #38bdf8;
       --accent-soft: rgba(56,189,248,0.18);
       --border-soft: rgba(148,163,184,0.35);
-      --danger: #f97373;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{
@@ -42,669 +41,89 @@
       gap:18px;
       overflow:hidden;
     }
-    .shell::before{
-      content:'';
-      position:absolute;
-      inset:0;
-      border-radius:inherit;
-      padding:1px;
-      background:linear-gradient(135deg,rgba(56,189,248,0.7),rgba(129,140,248,0.5),rgba(45,212,191,0.7));
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;
-      mask-composite:exclude;
-      pointer-events:none;
-      opacity:0.65;
-    }
-
     @media (min-width:768px){
-      .shell{
-        grid-template-columns:3fr 4fr;
-        padding:24px 24px 22px;
-      }
+      .shell{grid-template-columns:3fr 4fr;padding:24px 24px 22px;}
     }
 
-    .hero{
-      position:relative;
-      padding:4px 8px 12px 4px; /* 위로 당김 */
-      overflow:hidden;
-      border-radius:18px;
-    }
-    .hero-title{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:22px;
-      font-weight:800;
-      letter-spacing:0.02em;
-    }
-    .hero-pill{
-      font-size:11px;
-      padding:3px 9px;
-      border-radius:999px;
-      background:rgba(34,197,94,0.16);
-      border:1px solid rgba(34,197,94,0.7);
-      color:#bbf7d0;
-    }
-    .hero-sub{
-      margin-top:6px;
-      font-size:13px;
-      color:#9ca3af;
-      line-height:1.5;
-      max-width:none; /* 한 줄 느낌 */
-    }
-    .hero-sub strong{
-      color:#e5e7eb;
-    }
-    .hero-highlight{
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:linear-gradient(135deg,rgba(8,47,73,0.9),rgba(30,64,175,0.85));
-      border:1px solid rgba(56,189,248,0.8);
-      font-size:13px;
-      box-shadow:0 12px 35px rgba(15,23,42,0.9);
-    }
-    .hero-highlight b{
-      color:#e0f2fe;
-    }
-    .hero-badges{
-      margin-top:12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      font-size:11px;
-    }
-    .badge{
-      padding:3px 8px;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,0.45);
-      background:rgba(15,23,42,0.82);
-      color:#cbd5f5;
-    }
+    .hero{position:relative;padding:4px 8px 12px 4px;overflow:hidden;border-radius:18px;}
+    .hero-title{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;letter-spacing:0.02em;}
+    .hero-pill{font-size:11px;padding:3px 9px;border-radius:999px;background:rgba(34,197,94,0.16);border:1px solid rgba(34,197,94,0.7);color:#bbf7d0;}
+    .hero-sub{margin-top:8px;font-size:13px;color:#9ca3af;line-height:1.6;}
+    .hero-sub strong{color:#e5e7eb;}
+    .hero-highlight{margin-top:12px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(8,47,73,0.9),rgba(30,64,175,0.85));border:1px solid rgba(56,189,248,0.8);font-size:13px;box-shadow:0 12px 35px rgba(15,23,42,0.9);}
+    .hero-highlight b{color:#e0f2fe;}
+    .hero-list{margin-top:10px;display:grid;gap:6px;font-size:12px;color:#cbd5f5;}
+    .hero-list li{list-style:none;display:flex;gap:8px;align-items:flex-start;}
+    .hero-list span{color:#a5b4fc;font-weight:700;}
+    .hero-orbit{position:absolute;right:-40px;bottom:-40px;width:220px;height:220px;background:radial-gradient(circle at 30% 20%,rgba(56,189,248,0.6),transparent 60%),radial-gradient(circle at 80% 80%,rgba(249,115,22,0.55),transparent 55%);opacity:0.9;pointer-events:none;}
+    .orbit-ring{position:absolute;inset:34px;border-radius:999px;border:1px dashed rgba(148,163,184,0.4);box-shadow:0 0 24px rgba(15,23,42,0.9) inset;}
+    .planet{position:absolute;border-radius:999px;}
+    .planet-main{width:46px;height:46px;right:60px;top:32px;background:radial-gradient(circle at 30% 20%,#facc15,#f97316);box-shadow:0 0 28px rgba(250,204,21,0.7);}
+    .planet-sub{width:26px;height:26px;right:18px;bottom:52px;background:radial-gradient(circle at 30% 20%,#38bdf8,#6366f1);box-shadow:0 0 20px rgba(56,189,248,0.8);}
 
-    /* 이미지 없이 우주 분위기 */
-    .hero-orbit{
-      position:absolute;
-      right:-40px;
-      bottom:-40px;
-      width:220px;
-      height:220px;
-      background:
-        radial-gradient(circle at 30% 20%,rgba(56,189,248,0.6),transparent 60%),
-        radial-gradient(circle at 80% 80%,rgba(249,115,22,0.55),transparent 55%);
-      opacity:0.9;
-      pointer-events:none;
-    }
-    .orbit-ring{
-      position:absolute;
-      inset:34px;
-      border-radius:999px;
-      border:1px dashed rgba(148,163,184,0.4);
-      box-shadow:0 0 24px rgba(15,23,42,0.9) inset;
-    }
-    .planet{
-      position:absolute;
-      border-radius:999px;
-    }
-    .planet-main{
-      width:46px;
-      height:46px;
-      right:60px;
-      top:32px;
-      background:radial-gradient(circle at 30% 20%,#facc15,#f97316);
-      box-shadow:0 0 28px rgba(250,204,21,0.7);
-    }
-    .planet-sub{
-      width:26px;
-      height:26px;
-      right:18px;
-      bottom:52px;
-      background:radial-gradient(circle at 30% 20%,#38bdf8,#6366f1);
-      box-shadow:0 0 20px rgba(56,189,248,0.8);
-    }
+    .auth-card,.shop-card{background:var(--card-bg);border-radius:18px;border:1px solid var(--border-soft);padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(18px);}
+    .auth-header,.shop-header{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .auth-title,.shop-title{font-size:15px;font-weight:700;}
+    .auth-caption,.shop-sub{font-size:11px;color:#9ca3af;line-height:1.5;}
+    .auth-badge{font-size:11px;padding:3px 7px;border-radius:999px;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.7);color:#e0f2fe;}
+    .shop-toggle{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(56,189,248,0.7);background:rgba(56,189,248,0.14);color:#e0f2fe;font-weight:700;padding:6px 10px;border-radius:12px;cursor:pointer;transition:transform .14s ease-out, box-shadow .14s ease-out;}
+    .shop-toggle:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(56,189,248,0.5);}    
 
-    /* 관리 대시보드 */
-    .overview-card{
-      background:var(--card-bg);
-      border-radius:18px;
-      border:1px solid var(--border-soft);
-      padding:14px 14px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      backdrop-filter:blur(18px);
-      margin-bottom:8px;
-    }
-    .overview-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .overview-title{
-      font-size:15px;
-      font-weight:700;
-    }
-    .overview-desc{
-      font-size:11px;
-      color:#9ca3af;
-      line-height:1.5;
-    }
-    .chip{
-      padding:4px 9px;
-      border-radius:999px;
-      border:1px solid rgba(56,189,248,0.7);
-      background:rgba(56,189,248,0.14);
-      color:#e0f2fe;
-      font-size:11px;
-      white-space:nowrap;
-    }
-    .stat-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-      gap:8px;
-    }
-    .stat-card{
-      padding:10px 11px;
-      border-radius:12px;
-      border:1px solid rgba(148,163,184,0.5);
-      background:rgba(15,23,42,0.92);
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      box-shadow:0 10px 26px rgba(15,23,42,0.65);
-    }
-    .stat-title{font-size:11px;color:#9ca3af;}
-    .stat-row{display:flex;align-items:center;gap:8px;}
-    .stat-value{font-size:18px;font-weight:700;}
-    .stat-subvalue{font-size:12px;color:#a5b4fc;}
-    .btn-icon{
-      width:30px;
-      height:30px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:10px;
-      border:1px solid rgba(56,189,248,0.6);
-      background:rgba(56,189,248,0.14);
-      color:#e0f2fe;
-      font-weight:700;
-      line-height:1;
-      padding:0;
-      transition:transform .14s ease-out,box-shadow .14s ease-out,filter .14s ease-out;
-    }
-    .btn-icon:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 8px 18px rgba(56,189,248,0.5);}
-    .btn-icon:active{transform:translateY(0);}
-    .stat-trend{font-size:11px;color:#a5b4fc;}
-    .stat-trend.positive{color:#a7f3d0;}
-    .stat-trend.negative{color:#fca5a5;}
+    .field{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;}
+    .field label{font-size:11px;color:#9ca3af;}
+    .field input{padding:8px 10px;border-radius:9px;border:1px solid rgba(75,85,99,0.9);background:rgba(15,23,42,0.9);color:#e5e7eb;font-size:13px;}
+    .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px rgba(56,189,248,0.4);}
 
-    .history{
-      margin-top:4px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .history-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      font-size:12px;
-      color:#9ca3af;
-    }
-    .history-list{
-      list-style:none;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    .history-item{
-      border:1px solid rgba(148,163,184,0.5);
-      background:rgba(15,23,42,0.9);
-      border-radius:12px;
-      padding:9px 10px;
-      display:grid;
-      grid-template-columns:1.2fr 1fr 0.8fr;
-      gap:8px;
-      align-items:center;
-      font-size:11px;
-    }
-    @media (max-width:720px){
-      .history-item{grid-template-columns:1fr;}
-    }
-    .history-title{font-weight:600;}
-    .history-meta{color:#9ca3af;}
-    .history-delta{justify-self:end;}
-    .delta-pos{color:#a7f3d0;}
-    .delta-neg{color:#fca5a5;}
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:4px;
-      padding:3px 7px;
-      border-radius:999px;
-      font-size:10px;
-      border:1px solid rgba(148,163,184,0.55);
-      background:rgba(15,23,42,0.9);
-      color:#cbd5f5;
-    }
+    .btn-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+    button{border:none;cursor:pointer;font-size:12px;border-radius:999px;padding:7px 11px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;transition:transform .14s ease-out,box-shadow .14s ease-out,filter .14s ease-out;}
+    .btn-primary{background:linear-gradient(135deg,#38bdf8,#6366f1);color:white;border:1px solid rgba(191,219,254,0.9);box-shadow:0 8px 22px rgba(56,189,248,0.5);}
+    .btn-primary:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 12px 26px rgba(56,189,248,0.7);}
+    .btn-secondary{background:rgba(15,23,42,0.9);color:#e5e7eb;border:1px solid rgba(148,163,184,0.7);}
+    .btn-secondary:hover{filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 8px 20px rgba(15,23,42,0.8);}
 
-    .auth-card{
-      background:var(--card-bg);
-      border-radius:18px;
-      border:1px solid var(--border-soft);
-      padding:14px 14px 10px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      backdrop-filter:blur(18px);
-    }
-    .auth-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .auth-title{
-      font-size:15px;
-      font-weight:600;
-    }
-    .auth-caption{
-      font-size:11px;
-      color:#9ca3af;
-    }
-    .auth-badge{
-      font-size:11px;
-      padding:3px 7px;
-      border-radius:999px;
-      background:rgba(56,189,248,0.12);
-      border:1px solid rgba(56,189,248,0.7);
-      color:#e0f2fe;
-    }
+    .msg{margin-top:4px;font-size:11px;min-height:1.3em;color:#9ca3af;}
+    .user-bar{margin-top:8px;padding:7px 10px;border-radius:12px;background:rgba(15,23,42,0.96);border:1px solid rgba(148,163,184,0.6);font-size:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .user-email{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;}
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      margin-bottom:6px;
-    }
-    .field label{
-      font-size:11px;
-      color:#9ca3af;
-    }
-    .field input{
-      padding:8px 10px;
-      border-radius:9px;
-      border:1px solid rgba(75,85,99,0.9);
-      background:rgba(15,23,42,0.9);
-      color:#e5e7eb;
-      font-size:13px;
-    }
-    .field input:focus{
-      outline:none;
-      border-color:var(--accent);
-      box-shadow:0 0 0 1px rgba(56,189,248,0.4);
-    }
+    .packs{margin-top:6px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;align-items:stretch;}
+    .pack{position:relative;padding:11px;border-radius:16px;background:radial-gradient(circle at top,rgba(56,189,248,0.10),transparent 60%),rgba(15,23,42,0.96);border:1px solid rgba(148,163,184,0.7);display:flex;flex-direction:column;gap:6px;font-size:11px;box-shadow:0 10px 30px rgba(15,23,42,0.75);transition:transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;}
+    .pack:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 16px 40px rgba(15,23,42,0.9);}
+    .pack-name{font-weight:600;font-size:13px;display:flex;align-items:center;gap:5px;padding-right:44px;flex-wrap:wrap;}
+    .pack-tag{font-size:10px;padding:2px 6px;border-radius:999px;background:rgba(34,197,94,0.16);border:1px solid rgba(34,197,94,0.6);color:#bbf7d0;}
+    .pack-amount{color:#e5e7eb;font-size:13px;font-weight:600;}
+    .pack-price{font-size:11px;color:#9ca3af;opacity:0.95;}
+    .pack-highlight{font-size:10px;color:#a5b4fc;}
+    .pack-icon{position:absolute;right:10px;top:8px;font-size:16px;}
+    .shop-card.collapsed{display:none;}
+    .shop-card.locked{opacity:0.35;pointer-events:none;}
 
-    .btn-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-top:4px;
-    }
-    button{
-      border:none;
-      cursor:pointer;
-      font-size:12px;
-      border-radius:999px;
-      padding:7px 11px;
-      display:inline-flex;
-      align-items:center;
-      gap:4px;
-      white-space:nowrap;
-      transition:transform .14s ease-out,box-shadow .14s ease-out,filter .14s ease-out;
-    }
-    .btn-primary{
-      background:linear-gradient(135deg,#38bdf8,#6366f1);
-      color:white;
-      border:1px solid rgba(191,219,254,0.9);
-      box-shadow:0 8px 22px rgba(56,189,248,0.5);
-    }
-    .btn-primary:hover{
-      filter:brightness(1.06);
-      transform:translateY(-1px);
-      box-shadow:0 12px 26px rgba(56,189,248,0.7);
-    }
-    .btn-secondary{
-      background:rgba(15,23,42,0.9);
-      color:#e5e7eb;
-      border:1px solid rgba(148,163,184,0.7);
-    }
-    .btn-secondary:hover{
-      filter:brightness(1.04);
-      transform:translateY(-1px);
-      box-shadow:0 8px 20px rgba(15,23,42,0.8);
-    }
-
-    .msg{
-      margin-top:4px;
-      font-size:11px;
-      min-height:1.3em;
-      color:#9ca3af;
-    }
-    .msg strong{color:#e5e7eb;}
-
-    .login-note{
-      margin-top:4px;
-      font-size:11px;
-      color:#fde68a;
-      line-height:1.4;
-    }
-
-    .user-bar{
-      margin-top:8px;
-      padding:7px 10px;
-      border-radius:12px;
-      background:rgba(15,23,42,0.96);
-      border:1px solid rgba(148,163,184,0.6);
-      font-size:11px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .user-email{
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      max-width:200px;
-    }
-
-    .shop-card{
-      margin-top:10px;
-      background:var(--card-bg);
-      border-radius:18px;
-      border:1px solid var(--border-soft);
-      padding:12px 12px 10px;
-      backdrop-filter:blur(18px);
-    }
-    .shop-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
-    .shop-title{
-      font-size:14px;
-      font-weight:600;
-    }
-    .shop-sub{
-      font-size:11px;
-      color:#9ca3af;
-    }
-    .shop-promo{
-      font-size:11px;
-      color:#fde68a;
-      text-align:right;
-    }
-
-    .packs{
-      margin-top:10px;
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
-      align-items:stretch;
-    }
-    @media (min-width:900px){
-      .packs{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-    }
-
-    .pack{
-      position:relative;
-      padding:11px 11px 10px;
-      border-radius:16px;
-      background:
-        radial-gradient(circle at top,rgba(56,189,248,0.10),transparent 60%),
-        rgba(15,23,42,0.96);
-      border:1px solid rgba(148,163,184,0.7);
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      font-size:11px;
-      box-shadow:0 10px 30px rgba(15,23,42,0.75);
-      transition:transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
-    }
-    .pack:hover{
-      transform:translateY(-4px);
-      border-color:var(--accent);
-      box-shadow:0 16px 40px rgba(15,23,42,0.9);
-    }
-
-    /* 여기 padding-right를 줘서 오른쪽 아이콘과 글자가 안 겹치게 */
-    .pack-name{
-      font-weight:600;
-      font-size:13px;
-      display:flex;
-      align-items:center;
-      gap:5px;
-      padding-right:44px;
-      flex-wrap:wrap;
-    }
-    .pack-tag{
-      font-size:10px;
-      padding:2px 6px;
-      border-radius:999px;
-      background:rgba(34,197,94,0.16);
-      border:1px solid rgba(34,197,94,0.6);
-      color:#bbf7d0;
-    }
-    .pack-amount{
-      color:#e5e7eb;
-      font-size:13px;
-      font-weight:600;
-    }
-    .pack-price{
-      font-size:11px;
-      color:#9ca3af;
-      opacity:0.95;
-    }
-    .pack-highlight{
-      font-size:10px;
-      color:#a5b4fc;
-    }
-    .pack-icon{
-      position:absolute;
-      right:10px;
-      top:8px;
-      width:28px;
-      height:28px;
-      border-radius:999px;
-      background:rgba(15,23,42,0.92);
-      border:1px solid rgba(148,163,184,0.7);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:16px;
-      box-shadow:0 0 18px rgba(15,23,42,0.9);
-    }
-    .pack[data-tier="starter"] .pack-icon{border-color:#38bdf8;}
-    .pack[data-tier="bag"]     .pack-icon{border-color:#f97316;}
-    .pack[data-tier="bigbag"]  .pack-icon{border-color:#facc15;}
-    .pack[data-tier="chest"]   .pack-icon{border-color:#a855f7;}
-    .pack[data-tier="vault"]   .pack-icon{border-color:#22c55e;}
-
-    /* 강조 배지 (Most popular / Best value) */
-    .pack[data-feature="popular"]::before,
-    .pack[data-feature="best"]::before{
-      position:absolute;
-      left:-1px;
-      top:8px;
-      padding:2px 8px 3px;
-      border-radius:0 999px 999px 0;
-      font-size:10px;
-      font-weight:600;
-      letter-spacing:0.06em;
-      text-transform:uppercase;
-      color:#020617;
-    }
-    .pack[data-feature="popular"]::before{
-      content:"MOST POPULAR";
-      background:linear-gradient(135deg,#f97316,#facc15);
-    }
-    .pack[data-feature="best"]::before{
-      content:"BEST VALUE";
-      background:linear-gradient(135deg,#22c55e,#a3e635);
-    }
-
-    /* 울트라 티어 강조 */
-    .pack[data-tier="ultra"]{
-      border-color:rgba(56,189,248,0.9);
-      box-shadow:0 0 0 1px rgba(56,189,248,0.4),0 16px 40px rgba(15,23,42,0.9);
-    }
-    .pack[data-tier="ultra"] .pack-icon{
-      border-color:#38bdf8;
-    }
-    .pack[data-tier="ultra"] .pack-tag{
-      background:rgba(56,189,248,0.22);
-      border-color:#38bdf8;
-      color:#e0f2fe;
-    }
-
-    .pack button{
-      align-self:flex-start;
-      margin-top:2px;
-      padding:5px 9px;
-      font-size:11px;
-      border-radius:999px;
-      background:rgba(15,23,42,0.95);
-      color:#e5e7eb;
-      border:1px solid rgba(148,163,184,0.8);
-    }
-    .pack button:hover{
-      border-color:var(--accent);
-      color:#f9fafb;
-      transform:translateY(-1px);
-      box-shadow:0 8px 24px rgba(15,23,42,0.85);
-    }
-
-    /* 곡괭이 패키지 전용 */
-    .pack-perk{
-      background:radial-gradient(circle at top,rgba(56,189,248,0.18),transparent 60%),
-                 rgba(15,23,42,0.97);
-    }
-    .pack-perk.perk-locked{
-      opacity:0.4;
-    }
-    .pack-perk.perk-locked button{
-      opacity:0;
-      pointer-events:none;
-    }
-    .pack-perk.perk-done{
-      border-color:#22c55e;
-      box-shadow:0 0 0 1px rgba(34,197,94,0.5);
-    }
-    .pack-perk.perk-done .pack-tag{
-      background:rgba(34,197,94,0.3);
-      border-color:#22c55e;
-    }
-    .pack-perk.perk-done button{
-      opacity:0;
-      pointer-events:none;
-    }
-    .pack-perk.perk-done::after{
-      content:"구매 완료";
-      position:absolute;
-      right:10px;
-      bottom:8px;
-      font-size:10px;
-      color:#bbf7d0;
-      background:rgba(21,128,61,0.25);
-      border-radius:999px;
-      padding:2px 8px;
-      border:1px solid rgba(34,197,94,0.7);
-    }
-
-    /* 토스트 */
-    #toast{
-      position:fixed;
-      left:50%;
-      bottom:20px;
-      transform:translateX(-50%) translateY(8px);
-      max-width:92%;
-      padding:9px 12px;
-      border-radius:999px;
-      background:rgba(15,23,42,0.97);
-      color:#e5e7eb;
-      font-size:12px;
-      border:1px solid rgba(148,163,184,0.75);
-      box-shadow:0 10px 30px rgba(15,23,42,0.9);
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .22s ease-out,transform .22s ease-out;
-      z-index:50;
-    }
-    #toast.show{
-      opacity:1;
-      pointer-events:auto;
-      transform:translateX(-50%) translateY(0);
-    }
-
-    /* 구매 안내 모달 */
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(2,6,23,0.75);
-      backdrop-filter:blur(8px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .18s ease-out;
-      z-index:100;
-    }
-    .modal-backdrop.show{opacity:1;pointer-events:auto;}
-    .modal{
-      width:min(420px,calc(100% - 32px));
-      background:linear-gradient(135deg,rgba(15,23,42,0.97),rgba(30,41,59,0.94));
-      border:1px solid rgba(148,163,184,0.5);
-      border-radius:16px;
-      padding:16px 16px 14px;
-      box-shadow:0 24px 60px rgba(15,23,42,0.9);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .modal h3{font-size:16px;font-weight:700;}
-    .modal p{font-size:13px;color:#cbd5f5;line-height:1.5;}
-    .modal-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+    #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 14px;border-radius:12px;background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.7);color:#e0f2fe;font-size:12px;opacity:0;transition:opacity 0.2s ease;backdrop-filter:blur(8px);}
+    #toast.show{opacity:1;}
   </style>
 </head>
 <body>
   <div class="shell">
-    <!-- 왼쪽: 소개 -->
     <section class="hero">
       <div class="hero-title">
-        <span>이벤트코인 관리센터</span>
-        <span class="hero-pill">모니터링 + 결제</span>
+        <span>이벤트코인 센터</span>
+        <span class="hero-pill">게임 전용 화폐</span>
       </div>
       <p class="hero-sub">
-        이벤트코인 상태·흐름·알림을 한 줄로 쭉 보여주는 전용 대시보드야.
+        <strong>이벤트코인</strong>은 이벤트 배너, 한정 스킨, 전용 상점에서만 쓰이는 프리미엄 화폐야.
+        게임 우편으로 바로 지급되고, 계정에 영구 누적돼서 시즌이 바뀌어도 사라지지 않아.
       </p>
       <div class="hero-highlight">
-        <b>🛰 상태 모니터링 중심</b><br/>
-        로그인하면 보유량, 최근 지출·적립 흐름, 예산 경고를 한 번에 확인할 수 있어.
+        <b>무엇에 쓰나요?</b> 시즌 패스 보강, 한정 배너 픽업, 재화 부족 시 즉시 보충, 팀원 지원 선물 등에 사용할 수 있어.
       </div>
-      <div class="hero-badges">
-        <span class="badge">실시간 우편 지급</span>
-        <span class="badge">지출/적립 추적</span>
-        <span class="badge">게임 계정 연동</span>
+      <ul class="hero-list">
+        <li><span>1.</span> 구매 즉시 <strong>게임 우편함</strong>으로 전달돼서 바로 사용할 수 있어.</li>
+        <li><span>2.</span> 환급이나 만료 없이 <strong>남은 양이 그대로 유지</strong>돼. 다음 시즌 준비용으로도 적합해.</li>
+        <li><span>3.</span> 모든 결제는 <strong>PayApp</strong>을 통해 안전하게 처리돼.</li>
+      </ul>
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+        <button id="shop-toggle" class="shop-toggle" type="button">이벤트코인 +</button>
+        <span style="font-size:11px;color:#9ca3af;">필요할 때만 눌러서 패키지 목록을 열어봐.</span>
       </div>
-
       <div class="hero-orbit">
         <div class="orbit-ring"></div>
         <div class="planet planet-main"></div>
@@ -712,63 +131,12 @@
       </div>
     </section>
 
-    <!-- 오른쪽: 로그인 + 상점 -->
     <section>
-      <div class="overview-card">
-        <div class="overview-header">
-          <div>
-            <div class="overview-title">이벤트코인 관리 요약</div>
-            <div class="overview-desc">
-              최근 지출·적립 흐름과 보유량을 한눈에 정리했어. 로그인하면
-              아래 지표가 실시간으로 업데이트돼.
-            </div>
-          </div>
-          <div class="chip">관리 대시보드</div>
-        </div>
-
-        <div class="stat-grid">
-          <div class="stat-card">
-            <div class="stat-title">현재 보유량</div>
-            <div class="stat-row">
-              <div class="stat-value" id="stat-balance">– EC</div>
-              <button type="button" class="btn-icon" id="buy-more-btn" aria-label="이벤트코인 추가 구입">+</button>
-            </div>
-            <div class="stat-subvalue" id="stat-balance-worth">–원 예상 가치</div>
-            <div class="stat-trend positive" id="stat-balance-note">최근 결제 포함</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-title">이번 달 지출</div>
-            <div class="stat-value" id="stat-spend">–원</div>
-            <div class="stat-trend negative" id="stat-spend-note">목표 예산 대비</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-title">사용/적립 내역</div>
-            <div class="stat-value" id="stat-usage">– EC</div>
-            <div class="stat-trend" id="stat-usage-note">지출/보상 합산</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-title">예산 알림</div>
-            <div class="stat-value" id="stat-budget">–%</div>
-            <div class="stat-trend" id="stat-budget-note">월 예산 소진율</div>
-          </div>
-        </div>
-
-        <div class="history">
-          <div class="history-header">
-            <span>최근 이벤트코인 흐름</span>
-            <span class="pill">지출/적립 타임라인</span>
-          </div>
-          <ul class="history-list" id="history-list"></ul>
-        </div>
-      </div>
-
       <div class="auth-card" id="auth-card">
         <div class="auth-header">
           <div>
             <div class="auth-title">로그인</div>
-            <div class="auth-caption">
-              <strong>태양계 정복 게임에서 쓰는 계정</strong>으로 로그인해 줘.
-            </div>
+            <div class="auth-caption">게임에서 사용하는 계정으로 로그인해야 우편 지급이 정확하게 진행돼.</div>
           </div>
           <div class="auth-badge">게임 계정 필수</div>
         </div>
@@ -783,19 +151,10 @@
             <input id="password" type="password" autocomplete="current-password" required/>
           </div>
           <div class="btn-row">
-            <button type="submit" class="btn-primary">
-              이메일로 로그인
-            </button>
-            <button type="button" id="google-btn" class="btn-secondary">
-              Google 계정으로 로그인
-            </button>
+            <button type="submit" class="btn-primary">이메일로 로그인</button>
+            <button type="button" id="google-btn" class="btn-secondary">Google 계정으로 로그인</button>
           </div>
         </form>
-
-        <div class="login-note">
-          ⚠ <strong>반드시 게임에서 쓰는 계정과 같은 계정으로 로그인</strong>해야<br/>
-          이벤트코인·패키지가 정확한 게임 우편함과 계정에 적용돼.
-        </div>
 
         <div class="msg" id="msg"></div>
 
@@ -804,29 +163,23 @@
             <div style="font-size:10px;color:#9ca3af;">현재 로그인된 계정</div>
             <div class="user-email" id="user-label"></div>
           </div>
-          <button type="button" id="logout-btn" class="btn-secondary" style="font-size:11px;padding:5px 10px;">
-            로그아웃
-          </button>
+          <button type="button" id="logout-btn" class="btn-secondary" style="font-size:11px;padding:5px 10px;">로그아웃</button>
         </div>
       </div>
 
-      <!-- 이벤트코인 상품 -->
-      <div class="shop-card" id="shop-card" style="margin-top:10px;opacity:0.35;pointer-events:none;">
+      <div class="shop-card collapsed locked" id="shop-card" aria-hidden="true">
         <div class="shop-header">
           <div>
-            <div class="shop-title">이벤트코인 상품</div>
-            <div class="shop-sub">로그인 후 구매 가능 · 결제 후 즉시 우편 지급</div>
+            <div class="shop-title">이벤트코인 구매</div>
+            <div class="shop-sub">로그인 후 열림 · 결제 완료 시 즉시 우편 지급</div>
           </div>
-          <div class="shop-promo">🔥 지금은 <strong>x2 VALUE</strong> 프로모션 기간!</div>
+          <div class="shop-sub" style="text-align:right;color:#fde68a;">이벤트 기간 한정 x2 VALUE</div>
         </div>
 
         <div class="packs" id="pay-section">
           <div class="pack" data-tier="starter">
             <div class="pack-icon">✨</div>
-            <div class="pack-name">
-              스타터 묶음
-              <span class="pack-tag">입문용</span>
-            </div>
+            <div class="pack-name">스타터 묶음 <span class="pack-tag">입문용</span></div>
             <div class="pack-amount">이벤트코인 120개</div>
             <div class="pack-price">₩1,100 · 소소하게 시작하기</div>
             <div class="pack-highlight">튜토리얼·작은 버프용에 적당한 구성.</div>
@@ -835,10 +188,7 @@
 
           <div class="pack" data-tier="bag">
             <div class="pack-icon">🎒</div>
-            <div class="pack-name">
-              작은 자루
-              <span class="pack-tag">x2 VALUE</span>
-            </div>
+            <div class="pack-name">작은 자루 <span class="pack-tag">x2 VALUE</span></div>
             <div class="pack-amount">이벤트코인 300개</div>
             <div class="pack-price">₩2,200 · 가성비 패키지</div>
             <div class="pack-highlight">이벤트 전용 상점에서 체감 가치 상승.</div>
@@ -847,10 +197,7 @@
 
           <div class="pack" data-tier="bag" data-feature="popular">
             <div class="pack-icon">🧺</div>
-            <div class="pack-name">
-              중형 자루
-              <span class="pack-tag">추천</span>
-            </div>
+            <div class="pack-name">중형 자루 <span class="pack-tag">추천</span></div>
             <div class="pack-amount">이벤트코인 700개</div>
             <div class="pack-price">₩4,400 · 한정 상점 대비 최적</div>
             <div class="pack-highlight">이벤트 한 번은 넉넉하게 즐길 수 있는 양.</div>
@@ -859,10 +206,7 @@
 
           <div class="pack" data-tier="bigbag">
             <div class="pack-icon">💰</div>
-            <div class="pack-name">
-              대형 자루
-              <span class="pack-tag">x2 VALUE</span>
-            </div>
+            <div class="pack-name">대형 자루 <span class="pack-tag">x2 VALUE</span></div>
             <div class="pack-amount">이벤트코인 1,600개</div>
             <div class="pack-price">₩8,800 · 자주 하는 유저용</div>
             <div class="pack-highlight">우주선·배너 이벤트를 여유 있게 대비.</div>
@@ -871,10 +215,7 @@
 
           <div class="pack" data-tier="chest">
             <div class="pack-icon">📦</div>
-            <div class="pack-name">
-              보물 상자
-              <span class="pack-tag">고급</span>
-            </div>
+            <div class="pack-name">보물 상자 <span class="pack-tag">고급</span></div>
             <div class="pack-amount">이벤트코인 3,600개</div>
             <div class="pack-price">₩18,000 · 헤비 유저 패키지</div>
             <div class="pack-highlight">2~3회 대형 이벤트를 한 번에 준비.</div>
@@ -883,98 +224,29 @@
 
           <div class="pack" data-tier="vault" data-feature="best">
             <div class="pack-icon">🏦</div>
-            <div class="pack-name">
-              우주 창고
-              <span class="pack-tag">최고 가치</span> <!-- MAX VALUE 대신 한글로 변경 -->
-            </div>
+            <div class="pack-name">우주 창고 <span class="pack-tag">최고 가치</span></div>
             <div class="pack-amount">이벤트코인 8,000개</div>
             <div class="pack-price">₩39,000 · 장기 투자용</div>
             <div class="pack-highlight">장기적인 한정 콘텐츠 대비, 최대 혜택.</div>
             <button onclick="startPay('eco-8000')">8,000 EC 구매</button>
           </div>
 
-          <!-- 새 상품 1: 코스믹 번들 -->
           <div class="pack" data-tier="chest">
             <div class="pack-icon">🌌</div>
-            <div class="pack-name">
-              코스믹 번들
-              <span class="pack-tag">장기 이벤트</span>
-            </div>
+            <div class="pack-name">코스믹 번들 <span class="pack-tag">장기 이벤트</span></div>
             <div class="pack-amount">이벤트코인 5,000개</div>
             <div class="pack-price">₩25,000 · 이벤트 시즌 대비용</div>
             <div class="pack-highlight">여러 시즌을 한 번에 준비하는 꾸준한 유저에게 적당한 구성.</div>
             <button onclick="startPay('eco-5000')">5,000 EC 구매</button>
           </div>
 
-          <!-- 새 상품 2: 갤럭시 창고 -->
           <div class="pack" data-tier="ultra">
             <div class="pack-icon">🌀</div>
-            <div class="pack-name">
-              갤럭시 창고
-              <span class="pack-tag">ULTRA</span>
-            </div>
+            <div class="pack-name">갤럭시 창고 <span class="pack-tag">ULTRA</span></div>
             <div class="pack-amount">이벤트코인 12,000개</div>
             <div class="pack-price">₩69,000 · 최상위 유저용</div>
-            <div class="pack-highlight">장기간 모든 이벤트를 여유 있게 즐기고 싶은 유저를 위한 최상위 패키지.</div>
+            <div class="pack-highlight">모든 이벤트를 여유 있게 즐기려는 최상위 패키지.</div>
             <button onclick="startPay('eco-12000')">12,000 EC 구매</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 프리미엄 곡괭이 패키지 -->
-      <div class="shop-card" id="perk-card" style="margin-top:12px;opacity:0.35;pointer-events:none;">
-        <div class="shop-header">
-          <div>
-            <div class="shop-title">프리미엄 곡괭이 패키지</div>
-            <div class="shop-sub">계정 전체에 영구 적용되는 자원·코인·생산 배율</div>
-          </div>
-          <div class="shop-promo">⛏ 순서대로만 구매 가능</div>
-        </div>
-
-        <div class="packs" id="perk-section">
-          <!-- 돌 곡괭이 -->
-          <div class="pack pack-perk" data-perk="stone" id="perk-stone-card">
-            <div class="pack-icon">🪨</div>
-            <div class="pack-name">
-              돌 곡괭이 패키지
-              <span class="pack-tag">1단계</span>
-            </div>
-            <div class="pack-amount">평생 자원 x2 · 코인 x2</div>
-            <div class="pack-price">₩3,000</div>
-            <div class="pack-highlight" id="perk-stone-status">
-              첫 영구 배율 패키지. 이걸 먼저 구매해야 다음 단계가 열려.
-            </div>
-            <button id="perk-stone-btn" onclick="startPay('perk-stone')">₩3,000에 구매</button>
-          </div>
-
-          <!-- 철 곡괭이 -->
-          <div class="pack pack-perk perk-locked" data-perk="iron" id="perk-iron-card">
-            <div class="pack-icon">⛏️</div>
-            <div class="pack-name">
-              철 곡괭이 패키지
-              <span class="pack-tag">2단계</span>
-            </div>
-            <div class="pack-amount">평생 자원 x3 · 코인 x3 · 모든 생산 x2</div>
-            <div class="pack-price">₩7,000</div>
-            <div class="pack-highlight" id="perk-iron-status">
-              돌 곡괭이 패키지를 먼저 구매해야 열려.
-            </div>
-            <button id="perk-iron-btn" onclick="startPay('perk-iron')">₩7,000에 구매</button>
-          </div>
-
-          <!-- 다이아몬드 곡괭이 -->
-          <div class="pack pack-perk perk-locked" data-perk="diamond" id="perk-diamond-card">
-            <div class="pack-icon">💎</div>
-            <div class="pack-name">
-              다이아몬드 곡괭이 패키지
-              <span class="pack-tag">최종</span>
-            </div>
-            <div class="pack-amount">평생 자원 x5 · 코인 x5 · 모든 생산 x7</div>
-            <div class="pack-price">₩25,600</div>
-            <div class="pack-highlight" id="perk-diamond-status">
-              철 곡괭이 패키지를 먼저 구매해야 열려.
-            </div>
-            <button id="perk-diamond-btn" onclick="startPay('perk-diamond')">₩25,600에 구매</button>
           </div>
         </div>
       </div>
@@ -982,22 +254,7 @@
   </div>
 
   <div id="toast"></div>
-  <div class="modal-backdrop" id="buy-modal">
-    <div class="modal">
-      <h3>이벤트코인 더 구입하기</h3>
-      <p>
-        지금 가지고 있는 이벤트코인은 <strong id="modal-balance">– EC</strong>이고,
-        환산하면 약 <strong id="modal-worth">–원</strong> 정도야. 추가로 필요한 만큼 바로
-        결제할 수 있어.
-      </p>
-      <div class="modal-actions">
-        <button type="button" class="btn-secondary" id="buy-close">닫기</button>
-        <button type="button" class="btn-primary" id="buy-go-shop">구매 창 열기</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- ====== Firebase + 로직 ====== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import {
@@ -1007,9 +264,6 @@
       signInWithPopup,
       signOut
     } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
-    import {
-      getDatabase, ref, get, onValue
-    } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAIrsnUYEBG3cqbPrKD_eejOdtsCDjYG9k",
@@ -1024,7 +278,6 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db   = getDatabase(app);
 
     const loginForm  = document.getElementById('login-form');
     const googleBtn  = document.getElementById('google-btn');
@@ -1033,25 +286,27 @@
     const userBox    = document.getElementById('user-box');
     const userLabel  = document.getElementById('user-label');
     const shopCard   = document.getElementById('shop-card');
-    const perkCard   = document.getElementById('perk-card');
     const toastBox   = document.getElementById('toast');
-    const authCard   = document.getElementById('auth-card');
-    const authHeader = authCard?.querySelector('.auth-header');
-    const loginNote  = authCard?.querySelector('.login-note');
-    const buyModal   = document.getElementById('buy-modal');
-    const buyMoreBtn = document.getElementById('buy-more-btn');
-    const buyCloseBtn= document.getElementById('buy-close');
-    const buyGoShopBtn=document.getElementById('buy-go-shop');
-    const modalBalance = document.getElementById('modal-balance');
-    const modalWorth   = document.getElementById('modal-worth');
+    const shopToggle = document.getElementById('shop-toggle');
 
     const PAYAPP_USERID = 'siustudio';
+
+    const PACKS = {
+      "eco-120":  { kind:"eco",  priceKRW: 1100,  ecoins: 120,  title: "스타터 묶음" },
+      "eco-300":  { kind:"eco",  priceKRW: 2200,  ecoins: 300,  title: "이벤트코인 작은 자루" },
+      "eco-700":  { kind:"eco",  priceKRW: 4400,  ecoins: 700,  title: "이벤트코인 중형 자루" },
+      "eco-1600": { kind:"eco",  priceKRW: 8800,  ecoins: 1600, title: "이벤트코인 대형 자루" },
+      "eco-3600": { kind:"eco",  priceKRW: 18000, ecoins: 3600, title: "이벤트코인 보물 상자" },
+      "eco-8000": { kind:"eco",  priceKRW: 39000, ecoins: 8000, title: "이벤트코인 우주 창고" },
+      "eco-5000": { kind:"eco",  priceKRW: 25000, ecoins: 5000,  title: "코스믹 번들" },
+      "eco-12000":{ kind:"eco",  priceKRW: 69000, ecoins: 12000, title: "갤럭시 창고" }
+    };
 
     function setMsg(text){
       if(!msgBox) return;
       msgBox.textContent = text || '';
     }
-    function showToast(message, timeoutMs = 5000){
+    function showToast(message, timeoutMs = 4000){
       if(!toastBox) return;
       toastBox.textContent = message;
       toastBox.classList.add('show');
@@ -1059,440 +314,35 @@
         setTimeout(()=>toastBox.classList.remove('show'), timeoutMs);
       }
     }
-
-    // 프론트 상품 정의 (백엔드 PACKS와 반드시 동일)
-    const PACKS = {
-      // 이벤트코인
-      "eco-120":  { kind:"eco",  priceKRW: 1100,  ecoins: 120,  title: "스타터 묶음" },
-      "eco-300":  { kind:"eco",  priceKRW: 2200,  ecoins: 300,  title: "이벤트코인 작은 자루" },
-      "eco-700":  { kind:"eco",  priceKRW: 4400,  ecoins: 700,  title: "이벤트코인 중형 자루" },
-      "eco-1600": { kind:"eco",  priceKRW: 8800,  ecoins: 1600, title: "이벤트코인 대형 자루" },
-      "eco-3600": { kind:"eco",  priceKRW: 18000, ecoins: 3600, title: "이벤트코인 보물 상자" },
-      "eco-8000": { kind:"eco",  priceKRW: 39000, ecoins: 8000, title: "이벤트코인 우주 창고" },
-
-      // 새 이벤트코인 상품
-      "eco-5000": { kind:"eco",  priceKRW: 25000, ecoins: 5000,  title: "코스믹 번들" },
-      "eco-12000":{ kind:"eco",  priceKRW: 69000, ecoins: 12000, title: "갤럭시 창고" },
-
-      // 곡괭이 영구 패키지
-      "perk-stone": {
-        kind: "perk",
-        perkType: "pickaxe",
-        perkTier: 1,
-        priceKRW: 3000,
-        title: "돌 곡괭이 패키지",
-        description: "평생 자원 x2 · 코인 x2",
-        resourceMult: 2,
-        coinMult: 2,
-        productionMult: 1
-      },
-      "perk-iron": {
-        kind: "perk",
-        perkType: "pickaxe",
-        perkTier: 2,
-        priceKRW: 7000,
-        title: "철 곡괭이 패키지",
-        description: "평생 자원 x3 · 코인 x3 · 모든 생산 x2",
-        resourceMult: 3,
-        coinMult: 3,
-        productionMult: 2
-      },
-      "perk-diamond": {
-        kind: "perk",
-        perkType: "pickaxe",
-        perkTier: 3,
-        priceKRW: 25600,
-        title: "다이아몬드 곡괭이 패키지",
-        description: "평생 자원 x5 · 코인 x5 · 모든 생산 x7",
-        resourceMult: 5,
-        coinMult: 5,
-        productionMult: 7
-      }
-    };
-
-    const ECO_UNIT_PRICE = getBestEcoUnitPrice();
-    let latestTotalEco = 0;
-
-    // 관리 패널용 샘플 데이터 (지출·적립 흐름)
-    const LEDGER = [];
-    let baseEcoBalance = 0;
-    let baseLedgerEntry = null;
-    const MONTHLY_BUDGET = 60000;
-
-    function fmtNumber(n){
-      return new Intl.NumberFormat('ko-KR').format(Math.round(n));
-    }
-    function fmtMoney(n){
-      const sign = n > 0 ? '+' : n < 0 ? '-' : '';
-      return `${sign}${fmtNumber(Math.abs(n))}원`;
-    }
-    function fmtEco(n){
-      const sign = n > 0 ? '+' : n < 0 ? '-' : '';
-      return `${sign}${fmtNumber(Math.abs(n))} EC`;
-    }
-    function getBestEcoUnitPrice(){
-      const ecoPacks = Object.values(PACKS).filter(p=>p.kind === 'eco' && p.ecoins && p.priceKRW);
-      const unitPrices = ecoPacks.map(p=>p.priceKRW / p.ecoins);
-      return Math.min(...unitPrices);
-    }
-    function updateBuyModal(totalEco, estimated){
-      if(modalBalance) modalBalance.textContent = `${fmtNumber(totalEco)} EC`;
-      if(modalWorth) modalWorth.textContent = `${fmtNumber(estimated)}원`;
-    }
-    function openBuyModal(){
-      if(!buyModal) return;
-      buyModal.classList.add('show');
-      const estimated = Math.round(latestTotalEco * ECO_UNIT_PRICE);
-      updateBuyModal(latestTotalEco, estimated);
-    }
-    function closeBuyModal(){
-      if(!buyModal) return;
-      buyModal.classList.remove('show');
-    }
-
-    function renderManagement(){
-      const totalEco = baseEcoBalance + LEDGER.reduce((sum,l)=>sum + l.ecoDelta,0);
-      const monthPrefix = new Date().toISOString().slice(0,7);
-      const monthSpend = LEDGER
-        .filter(l=>l.cashDelta < 0 && l.date.startsWith(monthPrefix))
-        .reduce((sum,l)=>sum + Math.abs(l.cashDelta),0);
-      const ecoSpent = LEDGER.filter(l=>l.ecoDelta < 0).reduce((sum,l)=>sum + Math.abs(l.ecoDelta),0);
-      const ecoGained = LEDGER.filter(l=>l.ecoDelta > 0).reduce((sum,l)=>sum + l.ecoDelta,0);
-      const budgetRate = Math.min(100, Math.round((monthSpend / MONTHLY_BUDGET) * 100));
-      const estimatedValue = Math.round(totalEco * ECO_UNIT_PRICE);
-
-      const el = id=>document.getElementById(id);
-      latestTotalEco = totalEco;
-      el('stat-balance').textContent = `${fmtNumber(totalEco)} EC`;
-      el('stat-balance-worth').textContent = `대략 ${fmtNumber(estimatedValue)}원 가치`;
-      el('stat-balance-note').textContent = baseLedgerEntry
-        ? `게임 데이터 기준 보유량 ${fmtNumber(baseEcoBalance)} EC`
-        : '로그인 후 게임 데이터에서 보유량을 불러와.';
-      el('stat-spend').textContent = `-${fmtNumber(monthSpend)}원`;
-      el('stat-spend-note').textContent = `월 예산 ${fmtNumber(MONTHLY_BUDGET)}원 대비 ${budgetRate}%`;
-      el('stat-usage').textContent = `${fmtNumber(ecoGained - ecoSpent)} EC`;
-      el('stat-usage-note').textContent = `적립 ${fmtNumber(ecoGained)} · 지출 ${fmtNumber(ecoSpent)}`;
-      el('stat-budget').textContent = `${budgetRate}%`;
-      el('stat-budget-note').textContent = budgetRate >= 90
-        ? '경고: 예산 소진 임박'
-        : '안전 구간에서 사용 중';
-      updateBuyModal(totalEco, estimatedValue);
-
-      const historyEl = el('history-list');
-      if(historyEl){
-        historyEl.innerHTML = '';
-        const rows = baseLedgerEntry ? [baseLedgerEntry, ...LEDGER] : LEDGER;
-        rows.forEach(item=>{
-          const li = document.createElement('li');
-          li.className = 'history-item';
-
-          const title = document.createElement('div');
-          title.className = 'history-title';
-          title.textContent = `${item.type} · ${item.note}`;
-
-          const meta = document.createElement('div');
-          meta.className = 'history-meta';
-          meta.textContent = item.date;
-
-          const delta = document.createElement('div');
-          delta.className = 'history-delta ' + (item.ecoDelta >= 0 ? 'delta-pos' : 'delta-neg');
-          delta.textContent = `${fmtEco(item.ecoDelta)} / ${fmtMoney(item.cashDelta)}`;
-
-          li.appendChild(title);
-          li.appendChild(meta);
-          li.appendChild(delta);
-          historyEl.appendChild(li);
-        });
+    function setShopVisibility(show){
+      if(!shopCard) return;
+      shopCard.classList.toggle('collapsed', !show);
+      shopCard.setAttribute('aria-hidden', show ? 'false' : 'true');
+      if(shopToggle){
+        shopToggle.textContent = show ? '이벤트코인 −' : '이벤트코인 +';
       }
     }
-
-    function applyBaseEcoBalance(value){
-      const parsed = Math.max(0, Math.floor(Number(value) || 0));
-      baseEcoBalance = parsed;
-      baseLedgerEntry = {
-        date: new Date().toISOString().slice(0,10),
-        type: '보유량 동기화',
-        ecoDelta: 0,
-        cashDelta: 0,
-        note: `gamedata.eventcoins 기준 ${fmtNumber(parsed)} EC`
-      };
-      renderManagement();
+    function setShopEnabled(enabled){
+      if(!shopCard) return;
+      shopCard.classList.toggle('locked', !enabled);
     }
 
-    async function syncGameDataBalance(server,id){
-      try{
-        const gameDataRef = ref(db,`users/${server}/${id}/gamedata`);
-        const snap = await get(gameDataRef);
-        if(!snap.exists()){
-          setMsg('게임 데이터가 아직 없어서 보유량을 불러오지 못했어.');
-          return;
-        }
-        const gd = snap.val() || {};
-        const eco = gd.eventcoins ?? gd.eventCoins ?? gd.eco ?? gd.ecoins;
-        if(eco === undefined || eco === null){
-          setMsg('gamedata에 이벤트코인 항목이 없어. 게임에서 한번 업데이트해 줘.');
-          return;
-        }
-        const ecoNum = Number(eco);
-        if(Number.isNaN(ecoNum)){
-          setMsg('gamedata.eventcoins 값을 숫자로 읽을 수 없어. 게임에서 다시 저장해 줘.');
-          return;
-        }
-        applyBaseEcoBalance(ecoNum);
-        setMsg('게임 데이터의 이벤트코인 보유량을 불러왔어.');
-      }catch(err){
-        console.error(err);
-        setMsg('보유량을 불러오는 중 오류가 발생했습니다.');
-      }
-    }
-
-    renderManagement();
-
-    if(buyMoreBtn) buyMoreBtn.addEventListener('click', ()=>{
-      if(buyModal?.classList.contains('show')){
-        closeBuyModal();
-      }else{
-        openBuyModal();
-      }
-    });
-    if(buyCloseBtn) buyCloseBtn.addEventListener('click', closeBuyModal);
-    if(buyModal) buyModal.addEventListener('click', e=>{ if(e.target === buyModal) closeBuyModal(); });
-    if(buyGoShopBtn) buyGoShopBtn.addEventListener('click', ()=>{
-      closeBuyModal();
-      document.getElementById('shop-card')?.scrollIntoView({ behavior:'smooth', block:'start' });
-      setMsg('구매 창으로 이동했어. 원하는 패키지를 선택해 줘.');
+    shopToggle?.addEventListener('click', ()=>{
+      const open = shopCard?.classList.contains('collapsed') === false;
+      setShopVisibility(!open);
     });
 
-    function enableShop(enabled){
-      [shopCard, perkCard].forEach(card=>{
-        if(!card) return;
-        if(enabled){
-          card.style.opacity = '1';
-          card.style.pointerEvents = 'auto';
-        }else{
-          card.style.opacity = '0.35';
-          card.style.pointerEvents = 'none';
-        }
-      });
-    }
-
-    let mailboxListenerAttached = false;
-    let currentPickaxeTier = 0;
-
-    function updatePerkUI(tier){
-      currentPickaxeTier = tier || 0;
-
-      const stoneCard   = document.getElementById('perk-stone-card');
-      const ironCard    = document.getElementById('perk-iron-card');
-      const diamondCard = document.getElementById('perk-diamond-card');
-
-      const stoneStatus   = document.getElementById('perk-stone-status');
-      const ironStatus    = document.getElementById('perk-iron-status');
-      const diamondStatus = document.getElementById('perk-diamond-status');
-
-      const stoneBtn   = document.getElementById('perk-stone-btn');
-      const ironBtn    = document.getElementById('perk-iron-btn');
-      const diamondBtn = document.getElementById('perk-diamond-btn');
-
-      [stoneCard, ironCard, diamondCard].forEach(c=>{
-        if(!c) return;
-        c.classList.remove('perk-locked','perk-done');
-      });
-
-      function lock(btn){ if(btn){ btn.style.opacity='0'; btn.style.pointerEvents='none'; } }
-      function unlock(btn){ if(btn){ btn.style.opacity='1'; btn.style.pointerEvents='auto'; } }
-
-      // 기본 잠금 상태
-      if(ironCard)    ironCard.classList.add('perk-locked');
-      if(diamondCard) diamondCard.classList.add('perk-locked');
-
-      unlock(stoneBtn);
-      lock(ironBtn);
-      lock(diamondBtn);
-
-      if(stoneStatus){
-        stoneStatus.textContent = '첫 영구 배율 패키지. 이걸 먼저 구매해야 다음 단계가 열려.';
-      }
-      if(ironStatus){
-        ironStatus.textContent = '돌 곡괭이 패키지를 먼저 구매해야 열려.';
-      }
-      if(diamondStatus){
-        diamondStatus.textContent = '철 곡괭이 패키지를 먼저 구매해야 열려.';
-      }
-
-      if(currentPickaxeTier === 0){
-        // 기본 상태
-      }else if(currentPickaxeTier === 1){
-        if(stoneCard) stoneCard.classList.add('perk-done');
-        if(ironCard)  ironCard.classList.remove('perk-locked');
-        lock(stoneBtn);
-        unlock(ironBtn);
-        if(ironStatus){
-          ironStatus.textContent = '이제 평생 자원 x3 · 코인 x3 · 모든 생산 x2를 추가할 수 있어.';
-        }
-      }else if(currentPickaxeTier === 2){
-        if(stoneCard)   stoneCard.classList.add('perk-done');
-        if(ironCard)    ironCard.classList.add('perk-done');
-        if(diamondCard) diamondCard.classList.remove('perk-locked');
-        lock(stoneBtn);
-        lock(ironBtn);
-        unlock(diamondBtn);
-        if(diamondStatus){
-          diamondStatus.textContent = '최종 단계. 평생 자원 x5 · 코인 x5 · 모든 생산 x7까지 올라가.';
-        }
-      }else if(currentPickaxeTier >= 3){
-        if(stoneCard)   stoneCard.classList.add('perk-done');
-        if(ironCard)    ironCard.classList.add('perk-done');
-        if(diamondCard) diamondCard.classList.add('perk-done');
-        lock(stoneBtn);
-        lock(ironBtn);
-        lock(diamondBtn);
-        if(diamondStatus){
-          diamondStatus.textContent = '최대 레벨에 도달했습니다. 감사합니다!';
-        }
-      }
-    }
-
-    async function loadPerks(server,id){
-      try{
-        const perkRef = ref(db,`users/${server}/${id}/perks/pickaxe`);
-        const perkSnap = await get(perkRef);
-        let tier = 0;
-        if(perkSnap.exists()){
-          const val = perkSnap.val() || {};
-          tier = Number(val.tier || 0);
-        }
-        updatePerkUI(tier);
-      }catch(err){
-        console.error(err);
-        updatePerkUI(0);
-      }
-    }
-
-    async function attachMailboxListener(user){
-      if(!user || mailboxListenerAttached) return;
-      mailboxListenerAttached = true;
-      try{
-        setMsg('게임 우편함 연결 중...');
-        const mapRef = ref(db,'userServerMap/'+user.uid);
-        const mapSnap = await get(mapRef);
-        if(!mapSnap.exists()){
-          setMsg('먼저 태양계 정복 게임에 접속해서 계정을 만들어 줘.');
-          return;
-        }
-        const mapVal = mapSnap.val() || {};
-        const server = mapVal.server;
-        const id     = mapVal.id;
-        if(!server || !id){
-          setMsg('게임 계정 매핑 정보에 문제가 있어.');
-          return;
-        }
-
-        await syncGameDataBalance(server,id);
-
-        // 곡괭이 패키지 상태 로드
-        await loadPerks(server,id);
-
-        // 우편함 리스너 (이벤트코인 지급 감지)
-        const mailboxRef = ref(db,`users/${server}/${id}/mailbox`);
-        let prevIds = new Set();
-        onValue(mailboxRef,(snap)=>{
-          const raw = snap.exists() ? snap.val() : {};
-          const entries = Object.entries(raw || {}).map(([id,mail])=>({id,...(mail||{})}));
-          entries.sort((a,b)=>(b.sentAt||0)-(a.sentAt||0));
-          const now = Date.now();
-          const newOnes = entries.filter(m=>!prevIds.has(m.id));
-          prevIds = new Set(entries.map(m=>m.id));
-          if(!newOnes.length) return;
-
-          const recent = newOnes.filter(m=>{
-            const sent = Number(m.sentAt || 0);
-            return sent && (now - sent < 10*60*1000);
-          });
-          if(!recent.length) return;
-
-          const ecoMails = recent.filter(m=>{
-            const r = m.rewards || {};
-            const eco = Number(r.eventCoins ?? r.eco ?? r.ecoins ?? 0);
-            return eco > 0;
-          });
-
-          if(ecoMails.length){
-            const totalEco = ecoMails.reduce((sum,m)=>{
-              const r = m.rewards || {};
-              const eco = Number(r.eventCoins ?? r.eco ?? r.ecoins ?? 0) || 0;
-              return sum + Math.max(0,Math.floor(eco));
-            },0);
-            if(totalEco > 0){
-              showToast(`🎁 결제가 확인되었습니다! 이벤트코인 ${totalEco}개가 게임 우편함으로 지급되었습니다.`,7000);
-              setMsg('결제가 완료되어 게임 우편함으로 이벤트코인이 발송됐어.');
-              return;
-            }
-          }
-          showToast('새 우편이 도착했습니다. 태양계 정복 게임의 우편함을 확인해 줘.',6000);
-        });
-
-        setMsg('로그인 완료. 게임 우편함과 연동되었습니다.');
-      }catch(err){
-        console.error(err);
-        setMsg('우편함을 불러오는 중 오류가 발생했습니다.');
-      }
-    }
-
-    // 필요하면 부모창에서 받을 수 있도록 알림
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ source:'siu-space', type:'ECO_SHOP_READY' }, '*');
-    }
-
-    onAuthStateChanged(auth,(user)=>{
+    onAuthStateChanged(auth, (user)=>{
       if(user){
-        if(loginForm){
-          loginForm.style.opacity = '0.45';
-          loginForm.style.pointerEvents = 'none';
-          loginForm.style.display = 'none';   // 로그인 후 폼 안 보이게
-        }
-        if(authHeader){
-          authHeader.style.display = 'none';
-        }
-        if(loginNote){
-          loginNote.style.display = 'none';
-        }
-        if(userBox){
-          userBox.style.display = 'flex';
-        }
-        if(userLabel){
-          userLabel.textContent = user.email || user.displayName || user.uid;
-        }
-        setMsg('로그인이 확인되었습니다. 지금 로그인된 계정으로 결제가 진행돼. (게임 계정과 같은지 꼭 확인해 줘.)');
-        enableShop(true);
-        attachMailboxListener(user);
-
-        showToast('⚠ 게임과 같은 계정으로 로그인되어 있어야 정확하게 지급됩니다. 지금 로그인된 계정으로 결제가 진행됩니다.',7000);
+        if(userBox) userBox.style.display = '';
+        if(userLabel) userLabel.textContent = user.email || user.uid;
+        setMsg('로그인 완료! 원하는 이벤트코인을 선택하면 바로 결제할 수 있어.');
+        setShopEnabled(true);
       }else{
-        if(loginForm){
-          loginForm.style.opacity = '1';
-          loginForm.style.pointerEvents = 'auto';
-          loginForm.style.display = 'block';
-        }
-        if(authHeader){
-          authHeader.style.display = '';
-        }
-        if(loginNote){
-          loginNote.style.display = '';
-        }
-        if(userBox){
-          userBox.style.display = 'none';
-        }
-        if(userLabel){
-          userLabel.textContent = '';
-        }
-        enableShop(false);
-        mailboxListenerAttached = false;
-        baseEcoBalance = 0;
-        baseLedgerEntry = null;
-        renderManagement();
-        updatePerkUI(0);
-        setMsg('이벤트코인·패키지를 구매하려면 먼저 로그인해 줘.');
+        if(userBox) userBox.style.display = 'none';
+        if(userLabel) userLabel.textContent = '';
+        setMsg('로그인 후 이벤트코인을 구매해 줘.');
+        setShopEnabled(false);
       }
     });
 
@@ -1525,44 +375,19 @@
     });
 
     logoutBtn?.addEventListener('click', async ()=>{
-      try{
-        await signOut(auth);
-      }catch(err){
-        console.error(err);
-      }
+      try{ await signOut(auth); }catch(err){ console.error(err); }
     });
 
     window.startPay = function startPay(packId){
       const user = auth.currentUser;
       if(!user){
-        alert('먼저 로그인해 줘. (게임에서 쓰는 계정과 같은 계정으로 로그인해야 해)');
+        alert('먼저 로그인해 줘. (게임에서 쓰는 계정과 같은 계정이어야 해)');
         return;
       }
       const p = PACKS[packId];
       if(!p){
         alert('알 수 없는 상품입니다.');
         return;
-      }
-
-      // 곡괭이 패키지 순서 제한
-      if(p.kind === 'perk' && p.perkType === 'pickaxe'){
-        const tier = p.perkTier;
-        if(tier === 1 && currentPickaxeTier >= 1){
-          alert('돌 곡괭이 패키지는 이미 구매된 것으로 보입니다.');
-          return;
-        }
-        if(tier === 2 && currentPickaxeTier < 1){
-          alert('먼저 돌 곡괭이 패키지를 구매해야 합니다.');
-          return;
-        }
-        if(tier === 3 && currentPickaxeTier < 2){
-          alert('먼저 철 곡괭이 패키지를 구매해야 합니다.');
-          return;
-        }
-        if(tier <= currentPickaxeTier){
-          alert('이미 이 단계 이상의 곡괭이 패키지를 구매했습니다.');
-          return;
-        }
       }
 
       const redirect = new URL('/',location.origin);
@@ -1575,8 +400,6 @@
         kind: p.kind,
         priceKRW: p.priceKRW,
         ecoins: p.ecoins || 0,
-        perkType: p.perkType || null,
-        perkTier: p.perkTier || null,
         t: Date.now()
       };
 
@@ -1584,7 +407,7 @@
         showToast('PayApp 결제창을 여는 중...',4000);
         PayApp
           .setParam('userid',PAYAPP_USERID)
-          .setParam('shopname','태양계 정복 이벤트코인 상점')
+          .setParam('shopname','이벤트코인 스토어')
           .setParam('goodname',p.title)
           .setParam('price',String(p.priceKRW))
           .setParam('feedbackurl',location.origin+'/api/payapp/feedback')
@@ -1598,9 +421,8 @@
       }
     };
 
-    // 초기 UI
-    updatePerkUI(0);
-    enableShop(false);
+    setShopVisibility(false);
+    setShopEnabled(false);
   </script>
 </body>
 </html>
