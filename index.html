@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>태양계 정복 – 이벤트코인 상점</title>
+  <title>태양계 정복 – 이벤트코인 관리센터</title>
 
   <!-- PayApp Lite -->
   <script src="https://lite.payapp.kr/public/api/v2/payapp-lite.js"></script>
@@ -163,6 +163,113 @@
       bottom:52px;
       background:radial-gradient(circle at 30% 20%,#38bdf8,#6366f1);
       box-shadow:0 0 20px rgba(56,189,248,0.8);
+    }
+
+    /* 관리 대시보드 */
+    .overview-card{
+      background:var(--card-bg);
+      border-radius:18px;
+      border:1px solid var(--border-soft);
+      padding:14px 14px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      backdrop-filter:blur(18px);
+      margin-bottom:8px;
+    }
+    .overview-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .overview-title{
+      font-size:15px;
+      font-weight:700;
+    }
+    .overview-desc{
+      font-size:11px;
+      color:#9ca3af;
+      line-height:1.5;
+    }
+    .chip{
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid rgba(56,189,248,0.7);
+      background:rgba(56,189,248,0.14);
+      color:#e0f2fe;
+      font-size:11px;
+      white-space:nowrap;
+    }
+    .stat-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+      gap:8px;
+    }
+    .stat-card{
+      padding:10px 11px;
+      border-radius:12px;
+      border:1px solid rgba(148,163,184,0.5);
+      background:rgba(15,23,42,0.92);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      box-shadow:0 10px 26px rgba(15,23,42,0.65);
+    }
+    .stat-title{font-size:11px;color:#9ca3af;}
+    .stat-value{font-size:18px;font-weight:700;}
+    .stat-trend{font-size:11px;color:#a5b4fc;}
+    .stat-trend.positive{color:#a7f3d0;}
+    .stat-trend.negative{color:#fca5a5;}
+
+    .history{
+      margin-top:4px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .history-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-size:12px;
+      color:#9ca3af;
+    }
+    .history-list{
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .history-item{
+      border:1px solid rgba(148,163,184,0.5);
+      background:rgba(15,23,42,0.9);
+      border-radius:12px;
+      padding:9px 10px;
+      display:grid;
+      grid-template-columns:1.2fr 1fr 0.8fr;
+      gap:8px;
+      align-items:center;
+      font-size:11px;
+    }
+    @media (max-width:720px){
+      .history-item{grid-template-columns:1fr;}
+    }
+    .history-title{font-weight:600;}
+    .history-meta{color:#9ca3af;}
+    .history-delta{justify-self:end;}
+    .delta-pos{color:#a7f3d0;}
+    .delta-neg{color:#fca5a5;}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 7px;
+      border-radius:999px;
+      font-size:10px;
+      border:1px solid rgba(148,163,184,0.55);
+      background:rgba(15,23,42,0.9);
+      color:#cbd5f5;
     }
 
     .auth-card{
@@ -533,20 +640,21 @@
     <!-- 왼쪽: 소개 -->
     <section class="hero">
       <div class="hero-title">
-        <span>태양계 정복 · 이벤트코인 상점</span>
-        <span class="hero-pill">x2 VALUE</span>
+        <span>이벤트코인 관리센터</span>
+        <span class="hero-pill">모니터링 + 결제</span>
       </div>
       <p class="hero-sub">
-        태양계 정복에서 사용하는 <strong>이벤트코인</strong>과 <strong>프리미엄 곡괭이 패키지</strong>를 구매하는 공식 상점이야.
+        이벤트코인을 <strong>관리·구매</strong>하고, 최근 지출과 적립 흐름을
+        한 곳에서 확인하는 전용 대시보드야. 결제 기능은 그대로 제공해.
       </p>
       <div class="hero-highlight">
         <b>🎁 결제 즉시 우편 지급</b><br/>
-        <strong>게임에서 쓰는 계정과 똑같은 계정</strong>으로 로그인하면<br/>
-        결제 후 같은 계정의 게임 우편함으로 자동 지급돼.
+        로그인 후 구매하면 같은 계정의 게임 우편함으로 자동 지급돼.
+        관리 패널에서 보유량·지출 내역도 함께 확인 가능해.
       </div>
       <div class="hero-badges">
         <span class="badge">실시간 우편 지급</span>
-        <span class="badge">PayApp 안전 결제</span>
+        <span class="badge">지출/적립 추적</span>
         <span class="badge">게임 계정 연동</span>
       </div>
 
@@ -559,6 +667,50 @@
 
     <!-- 오른쪽: 로그인 + 상점 -->
     <section>
+      <div class="overview-card">
+        <div class="overview-header">
+          <div>
+            <div class="overview-title">이벤트코인 관리 요약</div>
+            <div class="overview-desc">
+              최근 구매·지출과 보유량을 한눈에 정리했어. 로그인 후 결제하면
+              아래 지표에 실시간으로 반영돼.
+            </div>
+          </div>
+          <div class="chip">관리 대시보드</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-title">현재 보유량</div>
+            <div class="stat-value" id="stat-balance">– EC</div>
+            <div class="stat-trend positive" id="stat-balance-note">최근 결제 포함</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">이번 달 지출</div>
+            <div class="stat-value" id="stat-spend">–원</div>
+            <div class="stat-trend negative" id="stat-spend-note">목표 예산 대비</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">사용/적립 내역</div>
+            <div class="stat-value" id="stat-usage">– EC</div>
+            <div class="stat-trend" id="stat-usage-note">지출/보상 합산</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-title">예산 알림</div>
+            <div class="stat-value" id="stat-budget">–%</div>
+            <div class="stat-trend" id="stat-budget-note">월 예산 소진율</div>
+          </div>
+        </div>
+
+        <div class="history">
+          <div class="history-header">
+            <span>최근 이벤트코인 흐름</span>
+            <span class="pill">지출/적립 타임라인</span>
+          </div>
+          <ul class="history-list" id="history-list"></ul>
+        </div>
+      </div>
+
       <div class="auth-card" id="auth-card">
         <div class="auth-header">
           <div>
@@ -886,6 +1038,79 @@
         productionMult: 7
       }
     };
+
+    // 관리 패널용 샘플 데이터 (지출·적립 흐름)
+    const LEDGER = [
+      { date:"2024-11-18", type:"구매",  ecoDelta:  8000, cashDelta:-39000, note:"우주 창고 구매 (PayApp)" },
+      { date:"2024-11-12", type:"지출", ecoDelta: -2500, cashDelta:     0, note:"길드 이벤트 보급 지출" },
+      { date:"2024-11-09", type:"적립", ecoDelta:  1200, cashDelta:     0, note:"커뮤니티 챌린지 보상" },
+      { date:"2024-11-05", type:"구매",  ecoDelta:  1600, cashDelta: -8800, note:"대형 자루 구매 (PayApp)" }
+    ];
+    const BASE_ECO_BALANCE = 1800;
+    const MONTHLY_BUDGET = 60000;
+
+    function fmtNumber(n){
+      return new Intl.NumberFormat('ko-KR').format(Math.round(n));
+    }
+    function fmtMoney(n){
+      const sign = n > 0 ? '+' : n < 0 ? '-' : '';
+      return `${sign}${fmtNumber(Math.abs(n))}원`;
+    }
+    function fmtEco(n){
+      const sign = n > 0 ? '+' : n < 0 ? '-' : '';
+      return `${sign}${fmtNumber(Math.abs(n))} EC`;
+    }
+
+    function renderManagement(){
+      const totalEco = BASE_ECO_BALANCE + LEDGER.reduce((sum,l)=>sum + l.ecoDelta,0);
+      const monthPrefix = new Date().toISOString().slice(0,7);
+      const monthSpend = LEDGER
+        .filter(l=>l.cashDelta < 0 && l.date.startsWith(monthPrefix))
+        .reduce((sum,l)=>sum + Math.abs(l.cashDelta),0);
+      const ecoSpent = LEDGER.filter(l=>l.ecoDelta < 0).reduce((sum,l)=>sum + Math.abs(l.ecoDelta),0);
+      const ecoGained = LEDGER.filter(l=>l.ecoDelta > 0).reduce((sum,l)=>sum + l.ecoDelta,0);
+      const budgetRate = Math.min(100, Math.round((monthSpend / MONTHLY_BUDGET) * 100));
+
+      const el = id=>document.getElementById(id);
+      el('stat-balance').textContent = `${fmtNumber(totalEco)} EC`;
+      el('stat-balance-note').textContent = `기초 보유 ${fmtNumber(BASE_ECO_BALANCE)} EC 포함`;
+      el('stat-spend').textContent = `-${fmtNumber(monthSpend)}원`;
+      el('stat-spend-note').textContent = `월 예산 ${fmtNumber(MONTHLY_BUDGET)}원 대비 ${budgetRate}%`;
+      el('stat-usage').textContent = `${fmtNumber(ecoGained - ecoSpent)} EC`;
+      el('stat-usage-note').textContent = `적립 ${fmtNumber(ecoGained)} · 지출 ${fmtNumber(ecoSpent)}`;
+      el('stat-budget').textContent = `${budgetRate}%`;
+      el('stat-budget-note').textContent = budgetRate >= 90
+        ? '경고: 예산 소진 임박'
+        : '안전 구간에서 사용 중';
+
+      const historyEl = el('history-list');
+      if(historyEl){
+        historyEl.innerHTML = '';
+        LEDGER.forEach(item=>{
+          const li = document.createElement('li');
+          li.className = 'history-item';
+
+          const title = document.createElement('div');
+          title.className = 'history-title';
+          title.textContent = `${item.type} · ${item.note}`;
+
+          const meta = document.createElement('div');
+          meta.className = 'history-meta';
+          meta.textContent = item.date;
+
+          const delta = document.createElement('div');
+          delta.className = 'history-delta ' + (item.ecoDelta >= 0 ? 'delta-pos' : 'delta-neg');
+          delta.textContent = `${fmtEco(item.ecoDelta)} / ${fmtMoney(item.cashDelta)}`;
+
+          li.appendChild(title);
+          li.appendChild(meta);
+          li.appendChild(delta);
+          historyEl.appendChild(li);
+        });
+      }
+    }
+
+    renderManagement();
 
     function enableShop(enabled){
       [shopCard, perkCard].forEach(card=>{
