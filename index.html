@@ -1114,13 +1114,9 @@
     let latestTotalEco = 0;
 
     // 관리 패널용 샘플 데이터 (지출·적립 흐름)
-    const LEDGER = [
-      { date:"2024-11-18", type:"구매",  ecoDelta:  8000, cashDelta:-39000, note:"우주 창고 구매 (PayApp)" },
-      { date:"2024-11-12", type:"지출", ecoDelta: -2500, cashDelta:     0, note:"길드 이벤트 보급 지출" },
-      { date:"2024-11-09", type:"적립", ecoDelta:  1200, cashDelta:     0, note:"커뮤니티 챌린지 보상" },
-      { date:"2024-11-05", type:"구매",  ecoDelta:  1600, cashDelta: -8800, note:"대형 자루 구매 (PayApp)" }
-    ];
-    const BASE_ECO_BALANCE = 1800;
+    const LEDGER = [];
+    let baseEcoBalance = 0;
+    let baseLedgerEntry = null;
     const MONTHLY_BUDGET = 60000;
 
     function fmtNumber(n){
@@ -1155,7 +1151,7 @@
     }
 
     function renderManagement(){
-      const totalEco = BASE_ECO_BALANCE + LEDGER.reduce((sum,l)=>sum + l.ecoDelta,0);
+      const totalEco = baseEcoBalance + LEDGER.reduce((sum,l)=>sum + l.ecoDelta,0);
       const monthPrefix = new Date().toISOString().slice(0,7);
       const monthSpend = LEDGER
         .filter(l=>l.cashDelta < 0 && l.date.startsWith(monthPrefix))
@@ -1169,7 +1165,9 @@
       latestTotalEco = totalEco;
       el('stat-balance').textContent = `${fmtNumber(totalEco)} EC`;
       el('stat-balance-worth').textContent = `대략 ${fmtNumber(estimatedValue)}원 가치`;
-      el('stat-balance-note').textContent = `기초 보유 ${fmtNumber(BASE_ECO_BALANCE)} EC 포함·단가 추정`;
+      el('stat-balance-note').textContent = baseLedgerEntry
+        ? `게임 데이터 기준 보유량 ${fmtNumber(baseEcoBalance)} EC`
+        : '로그인 후 게임 데이터에서 보유량을 불러와.';
       el('stat-spend').textContent = `-${fmtNumber(monthSpend)}원`;
       el('stat-spend-note').textContent = `월 예산 ${fmtNumber(MONTHLY_BUDGET)}원 대비 ${budgetRate}%`;
       el('stat-usage').textContent = `${fmtNumber(ecoGained - ecoSpent)} EC`;
@@ -1183,7 +1181,8 @@
       const historyEl = el('history-list');
       if(historyEl){
         historyEl.innerHTML = '';
-        LEDGER.forEach(item=>{
+        const rows = baseLedgerEntry ? [baseLedgerEntry, ...LEDGER] : LEDGER;
+        rows.forEach(item=>{
           const li = document.createElement('li');
           li.className = 'history-item';
 
@@ -1207,9 +1206,55 @@
       }
     }
 
+    function applyBaseEcoBalance(value){
+      const parsed = Math.max(0, Math.floor(Number(value) || 0));
+      baseEcoBalance = parsed;
+      baseLedgerEntry = {
+        date: new Date().toISOString().slice(0,10),
+        type: '보유량 동기화',
+        ecoDelta: 0,
+        cashDelta: 0,
+        note: `gamedata.eventcoins 기준 ${fmtNumber(parsed)} EC`
+      };
+      renderManagement();
+    }
+
+    async function syncGameDataBalance(server,id){
+      try{
+        const gameDataRef = ref(db,`users/${server}/${id}/gamedata`);
+        const snap = await get(gameDataRef);
+        if(!snap.exists()){
+          setMsg('게임 데이터가 아직 없어서 보유량을 불러오지 못했어.');
+          return;
+        }
+        const gd = snap.val() || {};
+        const eco = gd.eventcoins ?? gd.eventCoins ?? gd.eco ?? gd.ecoins;
+        if(eco === undefined || eco === null){
+          setMsg('gamedata에 이벤트코인 항목이 없어. 게임에서 한번 업데이트해 줘.');
+          return;
+        }
+        const ecoNum = Number(eco);
+        if(Number.isNaN(ecoNum)){
+          setMsg('gamedata.eventcoins 값을 숫자로 읽을 수 없어. 게임에서 다시 저장해 줘.');
+          return;
+        }
+        applyBaseEcoBalance(ecoNum);
+        setMsg('게임 데이터의 이벤트코인 보유량을 불러왔어.');
+      }catch(err){
+        console.error(err);
+        setMsg('보유량을 불러오는 중 오류가 발생했습니다.');
+      }
+    }
+
     renderManagement();
 
-    if(buyMoreBtn) buyMoreBtn.addEventListener('click', openBuyModal);
+    if(buyMoreBtn) buyMoreBtn.addEventListener('click', ()=>{
+      if(buyModal?.classList.contains('show')){
+        closeBuyModal();
+      }else{
+        openBuyModal();
+      }
+    });
     if(buyCloseBtn) buyCloseBtn.addEventListener('click', closeBuyModal);
     if(buyModal) buyModal.addEventListener('click', e=>{ if(e.target === buyModal) closeBuyModal(); });
     if(buyGoShopBtn) buyGoShopBtn.addEventListener('click', ()=>{
@@ -1343,6 +1388,8 @@
           return;
         }
 
+        await syncGameDataBalance(server,id);
+
         // 곡괭이 패키지 상태 로드
         await loadPerks(server,id);
 
@@ -1441,6 +1488,9 @@
         }
         enableShop(false);
         mailboxListenerAttached = false;
+        baseEcoBalance = 0;
+        baseLedgerEntry = null;
+        renderManagement();
         updatePerkUI(0);
         setMsg('이벤트코인·패키지를 구매하려면 먼저 로그인해 줘.');
       }
