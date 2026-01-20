@@ -13,12 +13,12 @@
   - 이메일/비밀번호, Google 로그인 제거
   - 대신 `https://xn--989a202a4ogwtc69p.siustudio.kro.kr/loginwithgame?redirect=...` 으로 이동하는
     **"게임 계정으로 로그인" 버튼**만 사용
-  - 로그인 후에는 `userServerMap/{uid}` → `users/{server}/{id}/mailbox` 를 실시간 구독하여
+  - 로그인 후에는 `android/uid/{uid}` → `users/{server}/{id}/mailbox` 를 실시간 구독하여
     새 우편(이벤트코인 보상)이 생기면 토스트 알림 표시
 - `api/payapp/feedback.js`
   - PayApp 웹훅 엔드포인트
   - linkval 검증 및 금액/상품 매칭 체크
-  - `userServerMap/{uid}`에서 server/id 조회 후, 우편 생성
+  - `android/uid/{uid}`에서 server/id 조회 후, 우편 생성
 - `package.json`
   - `firebase-admin` 의존성 정의
 

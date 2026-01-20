@@ -220,17 +220,17 @@ export default async function handler(req, res) {
       createdAt: admin.database.ServerValue.TIMESTAMP,
     });
 
-    // 2) userServerMap에서 server/id 찾기
-    const mapSnap = await db.ref(`userServerMap/${uid}`).once('value');
+    // 2) android/uid에서 server/id 찾기
+    const mapSnap = await db.ref(`android/uid/${uid}`).once('value');
     if (!mapSnap.exists()) {
-      console.error('[payapp] userServerMap not found for uid:', uid);
+      console.error('[payapp] android/uid not found for uid:', uid);
       return res.status(200).send('SUCCESS');
     }
     const mapVal = mapSnap.val() || {};
     const server = mapVal.server;
     const id = mapVal.id;
     if (!server || !id) {
-      console.error('[payapp] invalid userServerMap entry:', uid, mapVal);
+      console.error('[payapp] invalid android/uid entry:', uid, mapVal);
       return res.status(200).send('SUCCESS');
     }
 
