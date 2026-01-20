@@ -1127,7 +1127,7 @@
       mailboxListenerAttached = true;
       try{
         setMsg('게임 우편함 연결 중...');
-        const mapRef = ref(db,'userServerMap/'+user.uid);
+        const mapRef = ref(db,`android/uid/${user.uid}`);
         const mapSnap = await get(mapRef);
         if(!mapSnap.exists()){
           setMsg('먼저 태양계 정복 게임에 접속해서 계정을 만들어 줘.');
